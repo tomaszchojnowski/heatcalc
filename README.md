@@ -4,6 +4,9 @@ Instant heating system estimates
 Mock page:
 https://tomaszchojnowski.github.io/heatcalc/heatcalc_app_mockup.html
 
+Test page:
+https://tomaszchojnowski.github.io/heatcalc/test_page_calculator.html
+
 File Structure Plan:
 
 ```
