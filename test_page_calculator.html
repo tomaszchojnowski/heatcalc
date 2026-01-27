@@ -192,6 +192,8 @@ window.loadAndCalculate = function() {
   const postcode = document.getElementById('postcode').value;
   const propertyType = document.getElementById('propertyType').value;
   
+  console.log('Starting calculation...', { postcode, propertyType });
+  
   if (!postcode || !propertyType) {
     alert('Please enter postcode and select property type');
     return;
@@ -204,8 +206,10 @@ window.loadAndCalculate = function() {
   
   try {
     // 1. Format postcode and get climate
+    console.log('Getting climate data...');
     const formattedPostcode = formatPostcode(postcode);
     currentClimate = getClimateData(formattedPostcode);
+    console.log('Climate data:', currentClimate);
     
     // Display climate info
     let climateHtml = '<div class="result-box info">';
@@ -217,10 +221,16 @@ window.loadAndCalculate = function() {
     document.getElementById('climateInfo').innerHTML = climateHtml;
     
     // 2. Load template and create building
+    console.log('Loading template...');
     const template = getTemplate(propertyType);
+    console.log('Template:', template);
+    
+    console.log('Creating building...');
     currentBuilding = new Building(template);
+    console.log('Building created:', currentBuilding);
     
     const floorArea = currentBuilding.getTotalFloorArea();
+    console.log('Floor area:', floorArea);
     
     let propHtml = '<div class="result-box">';
     propHtml += `<h3>Property: ${template.name}</h3>`;
@@ -234,8 +244,13 @@ window.loadAndCalculate = function() {
     document.getElementById('propertyInfo').innerHTML = propHtml;
     
     // 3. Calculate heat loss
+    console.log('Calculating heat loss...');
     const calculator = new HeatLossCalculator(currentClimate);
+    console.log('Calculator created:', calculator);
+    
     const breakdown = calculator.calculate(currentBuilding);
+    console.log('Heat loss calculated:', breakdown);
+    console.log('Total heat loss:', currentBuilding.totalHeatLoss);
     
     let heatHtml = '<div class="result-box">';
     heatHtml += '<h3>Heat Loss Summary</h3>';
@@ -270,8 +285,11 @@ window.loadAndCalculate = function() {
     document.getElementById('heatLossResults').innerHTML = heatHtml;
     
     // 4. Calculate costs
+    console.log('Calculating costs...');
     const heatPumpCost = calculateSystemCost(currentBuilding, 'heatPump', true);
     const boilerCost = calculateSystemCost(currentBuilding, 'boiler', false);
+    console.log('Heat pump cost:', heatPumpCost);
+    console.log('Boiler cost:', boilerCost);
     
     // Heat pump display
     let hpHtml = '<div class="result-box">';
@@ -313,6 +331,8 @@ window.loadAndCalculate = function() {
     boilerHtml += `<p><strong>Monthly:</strong> £${boilerRunning.monthlyAverage.toLocaleString()}/month</p>`;
     boilerHtml += '</div>';
     document.getElementById('boilerCost').innerHTML = boilerHtml;
+    
+    console.log('All calculations complete!');
     
   } catch (error) {
     console.error('Error:', error);
