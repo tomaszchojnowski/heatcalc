@@ -1,0 +1,840 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Home Heating Assessment</title>
+<style>
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+  
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+  
+  .screen {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    opacity: 0;
+    transform: translateX(100%);
+    transition: all 0.4s ease-out;
+    position: absolute;
+    width: 100%;
+    top: 0;
+    left: 0;
+  }
+  
+  .screen.active {
+    opacity: 1;
+    transform: translateX(0);
+    position: relative;
+  }
+  
+  .screen.exit {
+    opacity: 0;
+    transform: translateX(-100%);
+  }
+  
+  /* SCREEN 1: Input */
+  .input-screen {
+    padding: 40px 20px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+  }
+  
+  .logo {
+    color: #fff;
+    font-size: 32px;
+    font-weight: 800;
+    margin-bottom: 10px;
+    text-align: center;
+  }
+  
+  .tagline {
+    color: rgba(255,255,255,0.9);
+    font-size: 16px;
+    margin-bottom: 50px;
+    text-align: center;
+  }
+  
+  .input-card {
+    background: rgba(255,255,255,0.15);
+    backdrop-filter: blur(20px);
+    border-radius: 24px;
+    padding: 30px;
+    border: 1px solid rgba(255,255,255,0.2);
+    width: 100%;
+    max-width: 400px;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.1);
+  }
+  
+  .input-group {
+    margin-bottom: 30px;
+  }
+  
+  .input-label {
+    color: #fff;
+    font-size: 14px;
+    font-weight: 600;
+    margin-bottom: 10px;
+    display: block;
+  }
+  
+  .postcode-input {
+    width: 100%;
+    padding: 16px;
+    border-radius: 12px;
+    border: 2px solid rgba(255,255,255,0.3);
+    background: rgba(255,255,255,0.2);
+    color: #fff;
+    font-size: 18px;
+    font-weight: 600;
+    text-transform: uppercase;
+    backdrop-filter: blur(10px);
+  }
+  
+  .postcode-input::placeholder {
+    color: rgba(255,255,255,0.5);
+  }
+  
+  .postcode-input:focus {
+    outline: none;
+    border-color: rgba(255,255,255,0.6);
+    background: rgba(255,255,255,0.25);
+  }
+  
+  .property-types {
+    display: grid;
+    gap: 12px;
+  }
+  
+  .property-option {
+    padding: 16px;
+    border-radius: 12px;
+    border: 2px solid rgba(255,255,255,0.3);
+    background: rgba(255,255,255,0.1);
+    color: #fff;
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+    text-align: left;
+  }
+  
+  .property-option:hover {
+    background: rgba(255,255,255,0.2);
+    border-color: rgba(255,255,255,0.5);
+  }
+  
+  .property-option.selected {
+    background: rgba(255,255,255,0.3);
+    border-color: #fff;
+    box-shadow: 0 4px 16px rgba(255,255,255,0.2);
+  }
+  
+  .continue-btn {
+    width: 100%;
+    padding: 18px;
+    border-radius: 12px;
+    border: none;
+    background: rgba(255,255,255,0.9);
+    color: #667eea;
+    font-size: 16px;
+    font-weight: 700;
+    cursor: pointer;
+    margin-top: 20px;
+    transition: all 0.2s;
+  }
+  
+  .continue-btn:hover {
+    background: #fff;
+    transform: translateY(-2px);
+    box-shadow: 0 8px 24px rgba(0,0,0,0.2);
+  }
+  
+  .continue-btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+  
+  /* SCREEN 2: Loading */
+  .loading-screen {
+    padding: 40px 20px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+  }
+  
+  .loading-content {
+    text-align: center;
+    color: #fff;
+  }
+  
+  .spinner {
+    width: 80px;
+    height: 80px;
+    border: 4px solid rgba(255,255,255,0.2);
+    border-top-color: #fff;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+    margin: 0 auto 30px;
+  }
+  
+  @keyframes spin {
+    to { transform: rotate(360deg); }
+  }
+  
+  .loading-text {
+    font-size: 20px;
+    font-weight: 600;
+    margin-bottom: 15px;
+  }
+  
+  .loading-steps {
+    font-size: 14px;
+    color: rgba(255,255,255,0.8);
+    line-height: 1.8;
+  }
+  
+  .loading-step {
+    opacity: 0.3;
+    transition: opacity 0.3s;
+  }
+  
+  .loading-step.active {
+    opacity: 1;
+  }
+  
+  /* SCREEN 3: Results */
+  .results-screen {
+    padding: 0;
+  }
+  
+  .status-bar {
+    padding: 10px 20px;
+    display: flex;
+    justify-content: space-between;
+    font-size: 12px;
+    color: #fff;
+  }
+  
+  .sticky-header {
+    background: rgba(255,255,255,0.15);
+    backdrop-filter: blur(20px);
+    border-bottom: 1px solid rgba(255,255,255,0.2);
+    padding: 15px 20px;
+    display: flex;
+    justify-content: space-around;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+  }
+  
+  .header-metric {
+    text-align: center;
+  }
+  
+  .header-label {
+    font-size: 12px;
+    color: rgba(255,255,255,0.8);
+    margin-bottom: 4px;
+  }
+  
+  .header-value {
+    font-size: 22px;
+    font-weight: 800;
+    color: #fff;
+  }
+  
+  .canvas-container {
+    height: 350px;
+    margin: 20px;
+    background: rgba(255,255,255,0.1);
+    backdrop-filter: blur(20px);
+    border: 1px solid rgba(255,255,255,0.2);
+    border-radius: 20px;
+    overflow: hidden;
+    position: relative;
+  }
+  
+  canvas {
+    width: 100% !important;
+    height: 100% !important;
+  }
+  
+  .property-info {
+    background: rgba(255,255,255,0.15);
+    backdrop-filter: blur(20px);
+    border-radius: 20px;
+    padding: 20px;
+    margin: 20px;
+    border: 1px solid rgba(255,255,255,0.2);
+    color: #fff;
+  }
+  
+  .property-title {
+    font-size: 18px;
+    font-weight: 700;
+    margin-bottom: 15px;
+  }
+  
+  .property-detail {
+    display: flex;
+    justify-content: space-between;
+    padding: 10px 0;
+    border-bottom: 1px solid rgba(255,255,255,0.1);
+    font-size: 14px;
+  }
+  
+  .property-detail:last-child {
+    border-bottom: none;
+  }
+  
+  .detail-label {
+    color: rgba(255,255,255,0.9);
+  }
+  
+  .detail-value {
+    font-weight: 600;
+  }
+  
+  .breakdown-card {
+    background: rgba(255,255,255,0.15);
+    backdrop-filter: blur(20px);
+    border-radius: 20px;
+    padding: 20px;
+    margin: 20px;
+    border: 1px solid rgba(255,255,255,0.2);
+    color: #fff;
+  }
+  
+  .breakdown-title {
+    font-size: 18px;
+    font-weight: 700;
+    margin-bottom: 15px;
+  }
+  
+  .cost-item {
+    display: flex;
+    justify-content: space-between;
+    padding: 12px 0;
+    border-bottom: 1px solid rgba(255,255,255,0.1);
+    font-size: 14px;
+  }
+  
+  .cost-item.total {
+    border-top: 2px solid rgba(255,255,255,0.3);
+    border-bottom: none;
+    padding-top: 15px;
+    margin-top: 10px;
+    font-weight: 700;
+    font-size: 16px;
+  }
+  
+  .cost-item.grant {
+    color: #4ade80;
+    font-weight: 600;
+  }
+  
+  .cost-item.final {
+    background: rgba(255,255,255,0.2);
+    margin: 15px -20px -20px;
+    padding: 20px;
+    border-radius: 0 0 20px 20px;
+    font-size: 20px;
+    font-weight: 800;
+  }
+  
+  .action-buttons {
+    padding: 20px;
+    display: grid;
+    gap: 12px;
+  }
+  
+  .action-btn {
+    padding: 16px;
+    border-radius: 12px;
+    border: none;
+    font-size: 15px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  
+  .action-btn.primary {
+    background: rgba(255,255,255,0.9);
+    color: #667eea;
+  }
+  
+  .action-btn.secondary {
+    background: rgba(255,255,255,0.2);
+    border: 2px solid rgba(255,255,255,0.4);
+    color: #fff;
+  }
+  
+  .action-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 24px rgba(0,0,0,0.2);
+  }
+  
+  .model-label {
+    position: absolute;
+    top: 15px;
+    left: 15px;
+    background: rgba(0,0,0,0.6);
+    color: #fff;
+    padding: 8px 12px;
+    border-radius: 8px;
+    font-size: 12px;
+    font-weight: 600;
+  }
+</style>
+</head>
+<body>
+
+<!-- SCREEN 1: INPUT -->
+<div class="screen active" id="inputScreen">
+  <div class="input-screen">
+    <div class="logo">🏠 HeatCalc</div>
+    <div class="tagline">Instant heating system estimates</div>
+    
+    <div class="input-card">
+      <div class="input-group">
+        <label class="input-label">Enter Your Postcode</label>
+        <input 
+          type="text" 
+          class="postcode-input" 
+          id="postcodeInput"
+          placeholder="SW1A 1AA"
+          maxlength="8"
+        >
+      </div>
+      
+      <div class="input-group">
+        <label class="input-label">Property Type</label>
+        <div class="property-types" id="propertyTypes">
+          <div class="property-option" data-type="victorian_terrace">
+            🏘️ Victorian Terrace
+          </div>
+          <div class="property-option" data-type="1930s_semi">
+            🏡 1930s Semi-Detached
+          </div>
+          <div class="property-option" data-type="postwar_detached">
+            🏠 Post-War Detached
+          </div>
+          <div class="property-option" data-type="newbuild">
+            🏗️ New Build
+          </div>
+          <div class="property-option" data-type="flat">
+            🏢 Flat/Apartment
+          </div>
+        </div>
+      </div>
+      
+      <button class="continue-btn" id="continueBtn" disabled>
+        Continue →
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- SCREEN 2: LOADING -->
+<div class="screen" id="loadingScreen">
+  <div class="loading-screen">
+    <div class="loading-content">
+      <div class="spinner"></div>
+      <div class="loading-text">Analyzing your property...</div>
+      <div class="loading-steps">
+        <div class="loading-step" data-step="1">✓ Climate data loaded</div>
+        <div class="loading-step" data-step="2">✓ Building template selected</div>
+        <div class="loading-step" data-step="3">✓ Generating 3D model</div>
+        <div class="loading-step" data-step="4">⏳ Calculating heat loss</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- SCREEN 3: RESULTS -->
+<div class="screen" id="resultsScreen">
+  <div class="results-screen">
+    <div class="status-bar">
+      <span>9:41</span>
+      <span>⚡︎ 85%</span>
+    </div>
+    
+    <div class="sticky-header">
+      <div class="header-metric">
+        <div class="header-label">Heat Loss</div>
+        <div class="header-value" id="heatLossDisplay">12.8 kW</div>
+      </div>
+      <div class="header-metric">
+        <div class="header-label">System Cost</div>
+        <div class="header-value" id="costDisplay">£8,500</div>
+      </div>
+    </div>
+    
+    <div class="canvas-container">
+      <canvas id="canvas3d"></canvas>
+      <div class="model-label" id="modelLabel">Victorian Terrace</div>
+    </div>
+    
+    <div class="property-info">
+      <div class="property-title">Property Details</div>
+      <div class="property-detail">
+        <span class="detail-label">Location</span>
+        <span class="detail-value" id="displayPostcode">SW1A 1AA</span>
+      </div>
+      <div class="property-detail">
+        <span class="detail-label">Bedrooms</span>
+        <span class="detail-value">3</span>
+      </div>
+      <div class="property-detail">
+        <span class="detail-label">Floors</span>
+        <span class="detail-value">2</span>
+      </div>
+      <div class="property-detail">
+        <span class="detail-label">Floor Area</span>
+        <span class="detail-value">81 m²</span>
+      </div>
+      <div class="property-detail">
+        <span class="detail-label">External Dimensions</span>
+        <span class="detail-value">4.5m × 9.0m</span>
+      </div>
+    </div>
+    
+    <div class="breakdown-card">
+      <div class="breakdown-title">Cost Breakdown</div>
+      <div class="cost-item">
+        <span>Heat Pump (10kW)</span>
+        <span>£6,500</span>
+      </div>
+      <div class="cost-item">
+        <span>8× Radiators</span>
+        <span>£1,600</span>
+      </div>
+      <div class="cost-item">
+        <span>Pipework & Controls</span>
+        <span>£1,200</span>
+      </div>
+      <div class="cost-item">
+        <span>Installation (3 days)</span>
+        <span>£1,800</span>
+      </div>
+      <div class="cost-item total">
+        <span>Subtotal</span>
+        <span>£11,100</span>
+      </div>
+      <div class="cost-item grant">
+        <span>BUS Grant</span>
+        <span>-£7,500</span>
+      </div>
+      <div class="cost-item final">
+        <span>Your Cost</span>
+        <span>£3,600</span>
+      </div>
+    </div>
+    
+    <div class="action-buttons">
+      <button class="action-btn primary">Fine-Tune Details</button>
+      <button class="action-btn secondary">Get Professional Quote</button>
+      <button class="action-btn secondary">Share Results</button>
+    </div>
+  </div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script>
+// Property templates
+const propertyTemplates = {
+  victorian_terrace: {
+    name: 'Victorian Terrace',
+    floors: 2,
+    dimensions: { width: 4.5, depth: 9, height: 2.7 },
+    bedrooms: 3,
+    floorArea: 81,
+    wallUValue: 2.1,
+    windowUValue: 5.0,
+    floorUValue: 0.7,
+    roofUValue: 2.3,
+    heatLoss: 12.8,
+    systemCost: 8500
+  },
+  '1930s_semi': {
+    name: '1930s Semi-Detached',
+    floors: 2,
+    dimensions: { width: 5, depth: 8, height: 2.5 },
+    bedrooms: 3,
+    floorArea: 80,
+    wallUValue: 1.5,
+    windowUValue: 4.8,
+    floorUValue: 0.8,
+    roofUValue: 1.8,
+    heatLoss: 10.5,
+    systemCost: 7200
+  },
+  postwar_detached: {
+    name: 'Post-War Detached',
+    floors: 2,
+    dimensions: { width: 7, depth: 8, height: 2.4 },
+    bedrooms: 4,
+    floorArea: 112,
+    wallUValue: 1.2,
+    windowUValue: 3.0,
+    floorUValue: 0.6,
+    roofUValue: 0.6,
+    heatLoss: 11.2,
+    systemCost: 7800
+  },
+  newbuild: {
+    name: 'New Build',
+    floors: 2,
+    dimensions: { width: 6, depth: 7, height: 2.4 },
+    bedrooms: 3,
+    floorArea: 84,
+    wallUValue: 0.28,
+    windowUValue: 1.4,
+    floorUValue: 0.22,
+    roofUValue: 0.16,
+    heatLoss: 5.8,
+    systemCost: 4500
+  },
+  flat: {
+    name: 'Flat/Apartment',
+    floors: 1,
+    dimensions: { width: 6, depth: 8, height: 2.4 },
+    bedrooms: 2,
+    floorArea: 48,
+    wallUValue: 1.5,
+    windowUValue: 3.0,
+    floorUValue: 0,
+    roofUValue: 0,
+    heatLoss: 4.2,
+    systemCost: 3800
+  }
+};
+
+let selectedType = null;
+let selectedTemplate = null;
+
+// Screen 1: Input handling
+const postcodeInput = document.getElementById('postcodeInput');
+const continueBtn = document.getElementById('continueBtn');
+const propertyOptions = document.querySelectorAll('.property-option');
+
+propertyOptions.forEach(option => {
+  option.addEventListener('click', () => {
+    propertyOptions.forEach(o => o.classList.remove('selected'));
+    option.classList.add('selected');
+    selectedType = option.dataset.type;
+    selectedTemplate = propertyTemplates[selectedType];
+    updateContinueButton();
+  });
+});
+
+postcodeInput.addEventListener('input', updateContinueButton);
+
+function updateContinueButton() {
+  const hasPostcode = postcodeInput.value.trim().length > 0;
+  const hasPropertyType = selectedType !== null;
+  continueBtn.disabled = !(hasPostcode && hasPropertyType);
+}
+
+continueBtn.addEventListener('click', () => {
+  transitionToScreen('loadingScreen');
+  simulateLoading();
+});
+
+// Screen transitions
+function transitionToScreen(screenId) {
+  const currentScreen = document.querySelector('.screen.active');
+  const nextScreen = document.getElementById(screenId);
+  
+  currentScreen.classList.remove('active');
+  currentScreen.classList.add('exit');
+  
+  setTimeout(() => {
+    nextScreen.classList.add('active');
+    currentScreen.classList.remove('exit');
+  }, 100);
+}
+
+// Loading simulation
+function simulateLoading() {
+  const steps = [1, 2, 3, 4];
+  let currentStep = 0;
+  
+  const interval = setInterval(() => {
+    if (currentStep < steps.length) {
+      const stepEl = document.querySelector(`[data-step="${steps[currentStep]}"]`);
+      stepEl.classList.add('active');
+      currentStep++;
+    } else {
+      clearInterval(interval);
+      setTimeout(() => {
+        transitionToScreen('resultsScreen');
+        initResults();
+      }, 500);
+    }
+  }, 600);
+}
+
+// Initialize results screen
+function initResults() {
+  // Update displays
+  document.getElementById('displayPostcode').textContent = postcodeInput.value.toUpperCase();
+  document.getElementById('modelLabel').textContent = selectedTemplate.name;
+  document.getElementById('heatLossDisplay').textContent = `${selectedTemplate.heatLoss} kW`;
+  document.getElementById('costDisplay').textContent = `£${selectedTemplate.systemCost.toLocaleString()}`;
+  
+  // Initialize 3D model
+  init3DModel(selectedTemplate);
+}
+
+// 3D Model Generation
+function init3DModel(template) {
+  const canvas = document.getElementById('canvas3d');
+  const scene = new THREE.Scene();
+  scene.background = new THREE.Color(0x6675dd);
+  
+  const camera = new THREE.PerspectiveCamera(50, canvas.clientWidth / canvas.clientHeight, 0.1, 1000);
+  camera.position.set(8, 6, 10);
+  camera.lookAt(0, template.dimensions.height / 2, 0);
+  
+  const renderer = new THREE.WebGLRenderer({ canvas, antialias: true });
+  renderer.setSize(canvas.clientWidth, canvas.clientHeight);
+  renderer.shadowMap.enabled = true;
+  
+  const ambientLight = new THREE.AmbientLight(0xffffff, 0.6);
+  scene.add(ambientLight);
+  
+  const directionalLight = new THREE.DirectionalLight(0xffffff, 0.6);
+  directionalLight.position.set(10, 15, 10);
+  directionalLight.castShadow = true;
+  scene.add(directionalLight);
+  
+  const { width, depth, height } = template.dimensions;
+  
+  // Ground floor
+  const floorGeometry = new THREE.BoxGeometry(width, 0.3, depth);
+  const floorMaterial = new THREE.MeshStandardMaterial({
+    color: 0x8b7355,
+    roughness: 0.8
+  });
+  const floor = new THREE.Mesh(floorGeometry, floorMaterial);
+  floor.position.y = 0;
+  floor.castShadow = true;
+  floor.receiveShadow = true;
+  scene.add(floor);
+  
+  // Walls - color coded by thermal performance
+  const wallColor = template.wallUValue > 1.5 ? 0xff6b6b : template.wallUValue > 0.5 ? 0xffd93d : 0x6bcf7f;
+  const wallMaterial = new THREE.MeshStandardMaterial({
+    color: wallColor,
+    transparent: true,
+    opacity: 0.85,
+    roughness: 0.6
+  });
+  
+  // Front and back walls
+  const wallFBGeometry = new THREE.BoxGeometry(width, height, 0.3);
+  const wallFront = new THREE.Mesh(wallFBGeometry, wallMaterial);
+  wallFront.position.set(0, height / 2, -depth / 2);
+  scene.add(wallFront);
+  
+  const wallBack = new THREE.Mesh(wallFBGeometry, wallMaterial);
+  wallBack.position.set(0, height / 2, depth / 2);
+  scene.add(wallBack);
+  
+  // Left and right walls
+  const wallLRGeometry = new THREE.BoxGeometry(0.3, height, depth);
+  const wallLeft = new THREE.Mesh(wallLRGeometry, wallMaterial);
+  wallLeft.position.set(-width / 2, height / 2, 0);
+  scene.add(wallLeft);
+  
+  const wallRight = new THREE.Mesh(wallLRGeometry, wallMaterial);
+  wallRight.position.set(width / 2, height / 2, 0);
+  scene.add(wallRight);
+  
+  // First floor (if 2 floors)
+  if (template.floors === 2) {
+    const floor1 = new THREE.Mesh(floorGeometry, floorMaterial);
+    floor1.position.y = height;
+    scene.add(floor1);
+    
+    // Upper walls
+    const wallFront2 = new THREE.Mesh(wallFBGeometry, wallMaterial);
+    wallFront2.position.set(0, height + height / 2, -depth / 2);
+    scene.add(wallFront2);
+    
+    const wallBack2 = new THREE.Mesh(wallFBGeometry, wallMaterial);
+    wallBack2.position.set(0, height + height / 2, depth / 2);
+    scene.add(wallBack2);
+    
+    const wallLeft2 = new THREE.Mesh(wallLRGeometry, wallMaterial);
+    wallLeft2.position.set(-width / 2, height + height / 2, 0);
+    scene.add(wallLeft2);
+    
+    const wallRight2 = new THREE.Mesh(wallLRGeometry, wallMaterial);
+    wallRight2.position.set(width / 2, height + height / 2, 0);
+    scene.add(wallRight2);
+  }
+  
+  // Roof
+  const roofHeight = template.floors * height;
+  const roofColor = template.roofUValue > 1.5 ? 0xff6b6b : template.roofUValue > 0.5 ? 0xffd93d : 0x6bcf7f;
+  const roofGeometry = new THREE.BoxGeometry(width + 0.4, 0.3, depth + 0.4);
+  const roofMaterial = new THREE.MeshStandardMaterial({
+    color: roofColor,
+    roughness: 0.7
+  });
+  const roof = new THREE.Mesh(roofGeometry, roofMaterial);
+  roof.position.y = roofHeight;
+  scene.add(roof);
+  
+  // Ground plane
+  const groundGeometry = new THREE.PlaneGeometry(30, 30);
+  const groundMaterial = new THREE.MeshStandardMaterial({
+    color: 0x7d9e6f,
+    roughness: 0.9
+  });
+  const ground = new THREE.Mesh(groundGeometry, groundMaterial);
+  ground.rotation.x = -Math.PI / 2;
+  ground.position.y = -0.5;
+  ground.receiveShadow = true;
+  scene.add(ground);
+  
+  // Animation
+  let rotation = 0;
+  function animate() {
+    requestAnimationFrame(animate);
+    rotation += 0.003;
+    camera.position.x = 10 * Math.sin(rotation);
+    camera.position.z = 10 * Math.cos(rotation);
+    camera.lookAt(0, roofHeight / 2, 0);
+    renderer.render(scene, camera);
+  }
+  
+  animate();
+  
+  // Handle resize
+  window.addEventListener('resize', () => {
+    const width = canvas.clientWidth;
+    const height = canvas.clientHeight;
+    camera.aspect = width / height;
+    camera.updateProjectionMatrix();
+    renderer.setSize(width, height);
+  });
+}
+</script>
+</body>
+</html>
