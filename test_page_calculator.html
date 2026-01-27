@@ -1,9 +1,10 @@
 <!DOCTYPE html>
+
 <html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Heat Loss Calculator Test</title>
+<title>Heat Loss Calculator Test - Simple</title>
 <style>
   body {
     font-family: Arial, sans-serif;
@@ -12,429 +13,314 @@
     padding: 20px;
     background: #f5f5f5;
   }
-  
-  h1, h2 {
-    color: #333;
-  }
-  
-  .section {
-    background: white;
-    padding: 20px;
-    margin-bottom: 20px;
-    border-radius: 8px;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-  }
-  
-  label {
-    display: block;
-    margin: 10px 0 5px;
-    font-weight: bold;
-  }
-  
-  select, input, button {
-    padding: 8px;
-    font-size: 14px;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-  }
-  
-  select, input {
-    width: 100%;
-    max-width: 400px;
-  }
-  
-  button {
-    background: #4CAF50;
-    color: white;
-    border: none;
-    padding: 10px 20px;
-    cursor: pointer;
-    margin-top: 10px;
-  }
-  
-  button:hover {
-    background: #45a049;
-  }
-  
-  .results {
-    margin-top: 20px;
-  }
-  
-  .result-box {
-    background: #e8f5e9;
-    padding: 15px;
-    margin: 10px 0;
-    border-left: 4px solid #4CAF50;
-  }
-  
-  .result-box h3 {
-    margin-top: 0;
-  }
-  
-  table {
-    width: 100%;
-    border-collapse: collapse;
-    margin-top: 10px;
-  }
-  
-  th, td {
-    text-align: left;
-    padding: 8px;
-    border-bottom: 1px solid #ddd;
-  }
-  
-  th {
-    background: #f5f5f5;
-    font-weight: bold;
-  }
-  
-  .error {
-    background: #ffebee;
-    color: #c62828;
-    padding: 10px;
-    border-radius: 4px;
-    border-left: 4px solid #c62828;
-  }
-  
-  .json-output {
-    background: #f5f5f5;
-    padding: 10px;
-    border-radius: 4px;
-    font-family: monospace;
-    font-size: 12px;
-    overflow-x: auto;
-    white-space: pre-wrap;
-  }
+
+h1, h2 {
+color: #333;
+}
+
+.section {
+background: white;
+padding: 20px;
+margin-bottom: 20px;
+border-radius: 8px;
+box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.grid {
+display: grid;
+grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+gap: 20px;
+}
+
+label {
+display: block;
+margin: 10px 0 5px;
+font-weight: bold;
+}
+
+select, input, button {
+padding: 8px;
+font-size: 14px;
+border: 1px solid #ccc;
+border-radius: 4px;
+}
+
+select, input {
+width: 100%;
+max-width: 400px;
+}
+
+button {
+background: #4CAF50;
+color: white;
+border: none;
+padding: 10px 20px;
+cursor: pointer;
+margin-top: 10px;
+margin-right: 10px;
+}
+
+button:hover {
+background: #45a049;
+}
+
+button.secondary {
+background: #2196F3;
+}
+
+button.secondary:hover {
+background: #0b7dda;
+}
+
+.results {
+margin-top: 20px;
+}
+
+.result-box {
+background: #e8f5e9;
+padding: 15px;
+margin: 10px 0;
+border-left: 4px solid #4CAF50;
+}
+
+.result-box.info {
+background: #e3f2fd;
+border-left-color: #2196F3;
+}
+
+.result-box h3 {
+margin-top: 0;
+}
+
+table {
+width: 100%;
+border-collapse: collapse;
+margin-top: 10px;
+}
+
+th, td {
+text-align: left;
+padding: 8px;
+border-bottom: 1px solid #ddd;
+}
+
+th {
+background: #f5f5f5;
+font-weight: bold;
+}
+
+.error {
+background: #ffebee;
+color: #c62828;
+padding: 10px;
+border-radius: 4px;
+border-left: 4px solid #c62828;
+}
+
+.success {
+background: #e8f5e9;
+color: #2e7d32;
+padding: 10px;
+border-radius: 4px;
+border-left: 4px solid #4CAF50;
+}
+
+.price {
+font-size: 24px;
+font-weight: bold;
+color: #4CAF50;
+}
 </style>
+
 </head>
 <body>
 
-<h1>Heat Loss Calculator Test Page</h1>
+<h1>🏠 Heat Loss Calculator - Simple Test</h1>
 
 <div class="section">
-  <h2>1. Select Property Template</h2>
-  
-  <label for="propertyType">Property Type:</label>
-  <select id="propertyType">
-    <option value="">-- Select --</option>
-    <option value="victorian_terrace">Victorian Terrace</option>
-    <option value="semi_1930s">1930s Semi-Detached</option>
-    <option value="postwar_detached">Post-War Detached</option>
-    <option value="newbuild">New Build</option>
-    <option value="flat">Flat/Apartment</option>
-  </select>
-  
-  <button onclick="loadTemplate()">Load Template</button>
-  
-  <div id="templateInfo" class="results"></div>
+  <h2>1. Select Property & Location</h2>
+
+<label for="postcode">Postcode:</label>
+<input type="text" id="postcode" placeholder="SW1A 1AA" value="SW1A 1AA">
+
+<label for="propertyType">Property Type:</label>
+<select id="propertyType">
+<option value="">– Select –</option>
+<option value="victorian_terrace">Victorian Terrace</option>
+<option value="semi_1930s">1930s Semi-Detached</option>
+<option value="postwar_detached">Post-War Detached</option>
+<option value="newbuild">New Build</option>
+<option value="flat">Flat/Apartment</option>
+</select>
+
+<button onclick="loadAndCalculate()">Load Property & Calculate</button>
+
+  <div id="propertyInfo" class="results"></div>
 </div>
 
 <div class="section">
-  <h2>2. Building Data</h2>
-  <div id="buildingData"></div>
+  <h2>2. Heat Loss Results</h2>
+  <div id="heatLossResults" class="results"></div>
 </div>
 
 <div class="section">
-  <h2>3. Calculate Heat Loss</h2>
-  
-  <label for="externalTemp">External Design Temperature (°C):</label>
-  <input type="number" id="externalTemp" value="-3" step="0.5">
-  
-  <label for="internalTemp">Internal Temperature (°C):</label>
-  <input type="number" id="internalTemp" value="21" step="0.5">
-  
-  <button onclick="calculateHeatLoss()">Calculate Heat Loss</button>
-  
-  <div id="calculationResults" class="results"></div>
+  <h2>3. System Costs</h2>
+  <div class="grid">
+    <div id="heatPumpCost"></div>
+    <div id="boilerCost"></div>
+  </div>
 </div>
 
 <div class="section">
-  <h2>4. Test Upgrades</h2>
-  
-  <label>
-    <input type="checkbox" id="upgradeLoft" value="loft">
-    Loft Insulation (U-value: 0.16)
-  </label>
-  
-  <label>
-    <input type="checkbox" id="upgradeWalls" value="walls">
-    Wall Insulation (U-value: 0.30)
-  </label>
-  
-  <label>
-    <input type="checkbox" id="upgradeFloor" value="floor">
-    Floor Insulation (U-value: 0.18)
-  </label>
-  
-  <label>
-    <input type="checkbox" id="upgradeWindows" value="windows">
-    Double Glazing (U-value: 1.4)
-  </label>
-  
-  <button onclick="testUpgrades()">Test Upgrades</button>
-  
-  <div id="upgradeResults" class="results"></div>
-</div>
-
-<div class="section">
-  <h2>5. JSON Export/Import</h2>
-  
-  <button onclick="exportJSON()">Export Building as JSON</button>
-  <button onclick="testImport()">Test Import from JSON</button>
-  
-  <div id="jsonOutput" class="results"></div>
+  <h2>4. Climate Data</h2>
+  <div id="climateInfo" class="results"></div>
 </div>
 
 <script type="module">
-// Import our modules
-import { PROPERTY_TEMPLATES, getTemplate, calculateFloorArea } from './propertyTemplates.js';
+// Import modules
+import { getTemplate, calculateFloorArea } from './propertyTemplates.js';
 import { Building } from './Building.js';
-import { Space } from './Space.js';
 import { HeatLossCalculator } from './HeatLossCalculator.js';
+import { calculateSystemCost, calculateRunningCosts } from './pricingData.js';
+import { getClimateData, validatePostcode, formatPostcode } from './climateData.js';
 
-// Make available globally for inline onclick handlers
-window.PROPERTY_TEMPLATES = PROPERTY_TEMPLATES;
-window.getTemplate = getTemplate;
-window.calculateFloorArea = calculateFloorArea;
-window.Building = Building;
-window.HeatLossCalculator = HeatLossCalculator;
-
-// Global state
+// Global variables (simple approach)
 let currentBuilding = null;
-let calculator = null;
+let currentClimate = null;
 
-window.loadTemplate = function() {
-  const select = document.getElementById('propertyType');
-  const templateId = select.value;
+window.loadAndCalculate = function() {
+  const postcode = document.getElementById('postcode').value;
+  const propertyType = document.getElementById('propertyType').value;
   
-  if (!templateId) {
-    alert('Please select a property type');
+  if (!postcode || !propertyType) {
+    alert('Please enter postcode and select property type');
+    return;
+  }
+  
+  if (!validatePostcode(postcode)) {
+    alert('Invalid postcode format');
     return;
   }
   
   try {
-    const template = getTemplate(templateId);
+    // 1. Format postcode and get climate
+    const formattedPostcode = formatPostcode(postcode);
+    currentClimate = getClimateData(formattedPostcode);
+    
+    // Display climate info
+    let climateHtml = '<div class="result-box info">';
+    climateHtml += `<h3>Climate Data for ${formattedPostcode}</h3>`;
+    climateHtml += `<p><strong>Region:</strong> ${currentClimate.name}</p>`;
+    climateHtml += `<p><strong>External Design Temp:</strong> ${currentClimate.externalDesignTemp}°C</p>`;
+    climateHtml += `<p><strong>Heating Degree Days:</strong> ${currentClimate.heatingDegreeDays}</p>`;
+    climateHtml += '</div>';
+    document.getElementById('climateInfo').innerHTML = climateHtml;
+    
+    // 2. Load template and create building
+    const template = getTemplate(propertyType);
     currentBuilding = new Building(template);
     
-    const floorArea = calculateFloorArea(template);
+    const floorArea = currentBuilding.getTotalFloorArea();
     
-    document.getElementById('templateInfo').innerHTML = `
-      <div class="result-box">
-        <h3>Template Loaded: ${template.name}</h3>
-        <p><strong>Era:</strong> ${template.era}</p>
-        <p><strong>Bedrooms:</strong> ${template.commonBedrooms}</p>
-        <p><strong>Dimensions:</strong> ${template.dimensions.width}m × ${template.dimensions.depth}m</p>
-        <p><strong>Floors:</strong> ${template.dimensions.floors}</p>
-        <p><strong>Floor Area:</strong> ${floorArea.toFixed(1)} m²</p>
-      </div>
-    `;
+    let propHtml = '<div class="result-box">';
+    propHtml += `<h3>Property: ${template.name}</h3>`;
+    propHtml += `<p><strong>Era:</strong> ${template.era}</p>`;
+    propHtml += `<p><strong>Bedrooms:</strong> ${template.commonBedrooms}</p>`;
+    propHtml += `<p><strong>Dimensions:</strong> ${template.dimensions.width}m × ${template.dimensions.depth}m</p>`;
+    propHtml += `<p><strong>Floors:</strong> ${template.dimensions.floors}</p>`;
+    propHtml += `<p><strong>Total Floor Area:</strong> ${floorArea.toFixed(1)} m²</p>`;
+    propHtml += `<p><strong>Number of Spaces:</strong> ${currentBuilding.getAllSpaces().length}</p>`;
+    propHtml += '</div>';
+    document.getElementById('propertyInfo').innerHTML = propHtml;
     
-    displayBuildingData();
-  } catch (error) {
-    document.getElementById('templateInfo').innerHTML = `
-      <div class="error">Error: ${error.message}</div>
-    `;
-  }
-};
-
-function displayBuildingData() {
-  if (!currentBuilding) return;
-  
-  let html = '<div class="result-box">';
-  html += '<h3>Building Structure</h3>';
-  
-  Object.keys(currentBuilding.floors).forEach(floorKey => {
-    const floor = currentBuilding.floors[floorKey];
-    html += `<h4>${floor.name}</h4>`;
-    html += '<table><tr><th>Space</th><th>Dimensions</th><th>Area</th></tr>';
-    
-    floor.spaces.forEach(space => {
-      html += `
-        <tr>
-          <td>${space.name}</td>
-          <td>${space.width.toFixed(1)}m × ${space.depth.toFixed(1)}m × ${space.height.toFixed(1)}m</td>
-          <td>${space.floorArea.toFixed(1)} m²</td>
-        </tr>
-      `;
-    });
-    
-    html += '</table>';
-  });
-  
-  html += '</div>';
-  document.getElementById('buildingData').innerHTML = html;
-}
-
-window.calculateHeatLoss = function() {
-  if (!currentBuilding) {
-    alert('Please load a template first');
-    return;
-  }
-  
-  try {
-    const externalTemp = parseFloat(document.getElementById('externalTemp').value);
-    const internalTemp = parseFloat(document.getElementById('internalTemp').value);
-    
-    calculator = new HeatLossCalculator({
-      externalDesignTemp: externalTemp,
-      internalDesignTemp: internalTemp,
-      internalDesignTempBedroom: 18
-    });
-    
+    // 3. Calculate heat loss
+    const calculator = new HeatLossCalculator(currentClimate);
     const breakdown = calculator.calculate(currentBuilding);
     
-    let html = '<div class="result-box">';
-    html += '<h3>Heat Loss Results</h3>';
-    html += `<p><strong>Total Heat Loss:</strong> ${currentBuilding.totalHeatLoss.toFixed(2)} kW</p>`;
-    html += `<p><strong>Fabric Loss:</strong> ${(breakdown.totals.fabricLoss / 1000).toFixed(2)} kW</p>`;
-    html += `<p><strong>Ventilation Loss:</strong> ${(breakdown.totals.ventilationLoss / 1000).toFixed(2)} kW</p>`;
-    html += `<p><strong>Thermal Bridging:</strong> ${(breakdown.totals.thermalBridging / 1000).toFixed(2)} kW</p>`;
-    html += `<p><strong>Peak Load (with margin):</strong> ${(breakdown.peakLoad / 1000).toFixed(2)} kW</p>`;
-    html += '</div>';
+    let heatHtml = '<div class="result-box">';
+    heatHtml += '<h3>Heat Loss Summary</h3>';
+    heatHtml += `<p class="price">${currentBuilding.totalHeatLoss.toFixed(2)} kW</p>`;
+    heatHtml += `<p><strong>Fabric Loss:</strong> ${(breakdown.totals.fabricLoss / 1000).toFixed(2)} kW</p>`;
+    heatHtml += `<p><strong>Ventilation Loss:</strong> ${(breakdown.totals.ventilationLoss / 1000).toFixed(2)} kW</p>`;
+    heatHtml += `<p><strong>Thermal Bridging:</strong> ${(breakdown.totals.thermalBridging / 1000).toFixed(2)} kW</p>`;
+    heatHtml += `<p><strong>Peak Load (20% margin):</strong> ${(breakdown.peakLoad / 1000).toFixed(2)} kW</p>`;
+    heatHtml += '</div>';
     
-    // System sizing
-    const sizing = calculator.getRecommendedSystemSize(currentBuilding);
-    html += '<div class="result-box">';
-    html += '<h3>System Sizing</h3>';
-    html += `<p><strong>Base Load:</strong> ${sizing.baseLoad.toFixed(2)} kW</p>`;
-    html += `<p><strong>Recommended Size:</strong> ${sizing.recommendedSize} kW</p>`;
-    html += `<p><strong>Safety Margin:</strong> ${((sizing.margin - 1) * 100).toFixed(0)}%</p>`;
-    html += '</div>';
-    
-    // Space breakdown
-    html += '<div class="result-box">';
-    html += '<h3>Space-by-Space Breakdown</h3>';
-    html += '<table><tr><th>Space</th><th>Floor Loss</th><th>Ceiling Loss</th><th>Wall Loss</th><th>Window Loss</th><th>Ventilation</th><th>Total</th></tr>';
+    // Space breakdown table
+    heatHtml += '<div class="result-box info">';
+    heatHtml += '<h3>Space-by-Space Breakdown</h3>';
+    heatHtml += '<table>';
+    heatHtml += '<tr><th>Space</th><th>Floor Area</th><th>Heat Loss</th><th>W/m²</th></tr>';
     
     currentBuilding.getAllSpaces().forEach(space => {
       const spaceLoss = breakdown.spaces[space.id];
-      const wallLoss = Object.values(spaceLoss.walls).reduce((sum, val) => sum + val, 0);
+      const lossPerM2 = spaceLoss.total / space.floorArea;
       
-      html += `
+      heatHtml += `
         <tr>
           <td>${space.name}</td>
-          <td>${(spaceLoss.floor).toFixed(0)} W</td>
-          <td>${(spaceLoss.ceiling).toFixed(0)} W</td>
-          <td>${(wallLoss).toFixed(0)} W</td>
-          <td>${(spaceLoss.windows).toFixed(0)} W</td>
-          <td>${(spaceLoss.ventilation).toFixed(0)} W</td>
-          <td><strong>${(spaceLoss.total).toFixed(0)} W</strong></td>
+          <td>${space.floorArea.toFixed(1)} m²</td>
+          <td>${spaceLoss.total.toFixed(0)} W</td>
+          <td>${lossPerM2.toFixed(0)} W/m²</td>
         </tr>
       `;
     });
     
-    html += '</table></div>';
+    heatHtml += '</table></div>';
+    document.getElementById('heatLossResults').innerHTML = heatHtml;
     
-    document.getElementById('calculationResults').innerHTML = html;
+    // 4. Calculate costs
+    const heatPumpCost = calculateSystemCost(currentBuilding, 'heatPump', true);
+    const boilerCost = calculateSystemCost(currentBuilding, 'boiler', false);
+    
+    // Heat pump display
+    let hpHtml = '<div class="result-box">';
+    hpHtml += '<h3>Heat Pump System</h3>';
+    hpHtml += `<p><strong>Capacity:</strong> ${heatPumpCost.capacity} kW</p>`;
+    hpHtml += `<p><strong>Equipment:</strong> £${heatPumpCost.breakdown.heatPumpUnit.toLocaleString()}</p>`;
+    hpHtml += `<p><strong>Radiators (${heatPumpCost.radiatorCount}×):</strong> £${heatPumpCost.breakdown.radiators.toLocaleString()}</p>`;
+    hpHtml += `<p><strong>Pipework:</strong> £${heatPumpCost.breakdown.pipework.toLocaleString()}</p>`;
+    hpHtml += `<p><strong>Hot Water Cylinder:</strong> £${heatPumpCost.breakdown.hotWaterCylinder.toLocaleString()}</p>`;
+    hpHtml += `<p><strong>Controls:</strong> £${heatPumpCost.breakdown.controls.toLocaleString()}</p>`;
+    hpHtml += `<p><strong>Labor (${heatPumpCost.installationDays} days):</strong> £${heatPumpCost.breakdown.labor.toLocaleString()}</p>`;
+    hpHtml += `<hr>`;
+    hpHtml += `<p><strong>Total Cost:</strong> £${heatPumpCost.totalCost.toLocaleString()}</p>`;
+    hpHtml += `<p><strong>BUS Grant:</strong> -£${heatPumpCost.grantAmount.toLocaleString()}</p>`;
+    hpHtml += `<p class="price">Your Cost: £${heatPumpCost.finalCost.toLocaleString()}</p>`;
+    
+    // Running costs
+    const hpRunning = calculateRunningCosts(currentBuilding, 'heatPump');
+    hpHtml += `<hr><p><strong>Annual Running Cost:</strong> £${hpRunning.annualCost.toLocaleString()}/year</p>`;
+    hpHtml += `<p><strong>Monthly:</strong> £${hpRunning.monthlyAverage.toLocaleString()}/month</p>`;
+    hpHtml += '</div>';
+    document.getElementById('heatPumpCost').innerHTML = hpHtml;
+    
+    // Boiler display
+    let boilerHtml = '<div class="result-box">';
+    boilerHtml += '<h3>Gas Boiler System</h3>';
+    boilerHtml += `<p><strong>Capacity:</strong> ${boilerCost.capacity} kW</p>`;
+    boilerHtml += `<p><strong>Equipment:</strong> £${boilerCost.breakdown.boilerUnit.toLocaleString()}</p>`;
+    boilerHtml += `<p><strong>Radiators (${boilerCost.radiatorCount}×):</strong> £${boilerCost.breakdown.radiators.toLocaleString()}</p>`;
+    boilerHtml += `<p><strong>Pipework:</strong> £${boilerCost.breakdown.pipework.toLocaleString()}</p>`;
+    boilerHtml += `<p><strong>Controls:</strong> £${boilerCost.breakdown.controls.toLocaleString()}</p>`;
+    boilerHtml += `<p><strong>Labor (${boilerCost.installationDays} days):</strong> £${boilerCost.breakdown.labor.toLocaleString()}</p>`;
+    boilerHtml += `<hr>`;
+    boilerHtml += `<p class="price">Total Cost: £${boilerCost.totalCost.toLocaleString()}</p>`;
+    
+    // Running costs
+    const boilerRunning = calculateRunningCosts(currentBuilding, 'boiler');
+    boilerHtml += `<hr><p><strong>Annual Running Cost:</strong> £${boilerRunning.annualCost.toLocaleString()}/year</p>`;
+    boilerHtml += `<p><strong>Monthly:</strong> £${boilerRunning.monthlyAverage.toLocaleString()}/month</p>`;
+    boilerHtml += '</div>';
+    document.getElementById('boilerCost').innerHTML = boilerHtml;
+    
   } catch (error) {
-    document.getElementById('calculationResults').innerHTML = `
-      <div class="error">Error: ${error.message}</div>
-    `;
+    console.error('Error:', error);
+    document.getElementById('propertyInfo').innerHTML = `<div class="error">Error: ${error.message}<br><br>Stack: ${error.stack}</div>`;
   }
 };
 
-window.testUpgrades = function() {
-  if (!currentBuilding || !calculator) {
-    alert('Please calculate heat loss first');
-    return;
-  }
-  
-  const upgrades = [];
-  
-  if (document.getElementById('upgradeLoft').checked) {
-    upgrades.push({ type: 'loft_insulation', newUValue: 0.16 });
-  }
-  if (document.getElementById('upgradeWalls').checked) {
-    upgrades.push({ type: 'wall_insulation', newUValue: 0.30 });
-  }
-  if (document.getElementById('upgradeFloor').checked) {
-    upgrades.push({ type: 'floor_insulation', newUValue: 0.18 });
-  }
-  if (document.getElementById('upgradeWindows').checked) {
-    upgrades.push({ type: 'windows', newUValue: 1.4 });
-  }
-  
-  if (upgrades.length === 0) {
-    alert('Please select at least one upgrade');
-    return;
-  }
-  
-  try {
-    const impact = calculator.calculateUpgradeImpact(currentBuilding, upgrades);
-    
-    let html = '<div class="result-box">';
-    html += '<h3>Upgrade Impact Analysis</h3>';
-    html += `<p><strong>Original Heat Loss:</strong> ${impact.originalLoss.toFixed(2)} kW</p>`;
-    html += `<p><strong>New Heat Loss:</strong> ${impact.newLoss.toFixed(2)} kW</p>`;
-    html += `<p><strong>Savings:</strong> ${impact.savings.toFixed(2)} kW (${impact.savingsPercent.toFixed(1)}%)</p>`;
-    html += '</div>';
-    
-    document.getElementById('upgradeResults').innerHTML = html;
-  } catch (error) {
-    document.getElementById('upgradeResults').innerHTML = `
-      <div class="error">Error: ${error.message}</div>
-    `;
-  }
-};
-
-window.exportJSON = function() {
-  if (!currentBuilding) {
-    alert('Please load a template first');
-    return;
-  }
-  
-  const json = JSON.stringify(currentBuilding.toJSON(), null, 2);
-  
-  let html = '<div class="result-box">';
-  html += '<h3>Building JSON Export</h3>';
-  html += `<div class="json-output">${json}</div>`;
-  html += '<button onclick="copyToClipboard()">Copy to Clipboard</button>';
-  html += '</div>';
-  
-  document.getElementById('jsonOutput').innerHTML = html;
-  
-  // Store for clipboard
-  window.exportedJSON = json;
-};
-
-window.copyToClipboard = function() {
-  navigator.clipboard.writeText(window.exportedJSON).then(() => {
-    alert('JSON copied to clipboard!');
-  });
-};
-
-window.testImport = function() {
-  if (!window.exportedJSON) {
-    alert('Please export JSON first');
-    return;
-  }
-  
-  try {
-    const data = JSON.parse(window.exportedJSON);
-    const importedBuilding = Building.fromJSON(data);
-    
-    let html = '<div class="result-box">';
-    html += '<h3>Import Test Successful</h3>';
-    html += `<p><strong>Property Type:</strong> ${importedBuilding.propertyName}</p>`;
-    html += `<p><strong>Total Floor Area:</strong> ${importedBuilding.getTotalFloorArea().toFixed(1)} m²</p>`;
-    html += `<p><strong>Spaces:</strong> ${importedBuilding.getAllSpaces().length}</p>`;
-    html += `<p><strong>Heat Loss:</strong> ${importedBuilding.totalHeatLoss.toFixed(2)} kW</p>`;
-    html += '<p style="color: green;">✓ Building successfully serialized and deserialized!</p>';
-    html += '</div>';
-    
-    document.getElementById('jsonOutput').innerHTML += html;
-  } catch (error) {
-    document.getElementById('jsonOutput').innerHTML += `
-      <div class="error">Import Error: ${error.message}</div>
-    `;
-  }
-};
-
-// Initial message
-document.getElementById('buildingData').innerHTML = '<p style="color: #999;">Load a template to see building data...</p>';
-document.getElementById('calculationResults').innerHTML = '<p style="color: #999;">Calculate heat loss to see results...</p>';
-document.getElementById('upgradeResults').innerHTML = '<p style="color: #999;">Test upgrades to see impact...</p>';
-document.getElementById('jsonOutput').innerHTML = '<p style="color: #999;">Export building to see JSON...</p>';
+console.log('Simple test page loaded. Fill in postcode and property type, then click "Load Property & Calculate"');
 </script>
 
 </body>
