@@ -2,6 +2,7 @@
 Instant heating system estimates
 
 File Structure Plan:
+'''
 /home-heating-app
 ├── /public
 │   ├── index.html                 # Main entry point (minimal)
@@ -69,3 +70,4 @@ File Structure Plan:
 ├── package.json
 ├── vite.config.js                # Build configuration
 └── README.md
+'''
