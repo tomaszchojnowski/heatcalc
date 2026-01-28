@@ -256,10 +256,21 @@ window.loadAndCalculate = function() {
     console.log('Calculating heat loss...');
     const calculator = new HeatLossCalculator(currentClimate);
     console.log('Calculator created:', calculator);
+    console.log('Calculator climate:', calculator.climate);
+    
+    // Check one space manually before calculation
+    const testSpace = currentBuilding.getAllSpaces()[0];
+    console.log('Testing space before calculation:', testSpace.name);
+    console.log('Space floor area:', testSpace.floorArea);
+    console.log('Space volume:', testSpace.getVolume());
+    console.log('Space window area:', testSpace.getWindowArea());
     
     const breakdown = calculator.calculate(currentBuilding);
     console.log('Heat loss calculated:', breakdown);
     console.log('Total heat loss:', currentBuilding.totalHeatLoss);
+    
+    // Check the same space after calculation
+    console.log('Space heat loss after calc:', testSpace.heatLoss);
     
     let heatHtml = '<div class="result-box">';
     heatHtml += '<h3>Heat Loss Summary</h3>';
