@@ -211,14 +211,20 @@ export function setPostcode(postcode, climateData) {
  * Set building from template
  */
 export function setBuilding(building) {
-  setState({ building: building }, true);
+  // Store the building directly
+  state.building = building;
+  pushToHistory();
+  notify(['building']);
 }
 
 /**
  * Update building (for edits)
  */
 export function updateBuilding(building) {
-  setState({ building: building }, true);
+  state.building = building;
+  state.hasUnsavedChanges = true;
+  pushToHistory();
+  notify(['building']);
 }
 
 /**
@@ -294,14 +300,24 @@ export function removeModification(modificationId) {
  * History management - Push current state to history
  */
 function pushToHistory() {
+  if (!state.building) return;
+  
   // Remove any future history if we're not at the end
   if (state.historyIndex < state.history.length - 1) {
     state.history = state.history.slice(0, state.historyIndex + 1);
   }
   
+  // Convert building to JSON if it has toJSON method
+  let buildingData = null;
+  if (state.building) {
+    buildingData = typeof state.building.toJSON === 'function' 
+      ? state.building.toJSON() 
+      : state.building;
+  }
+  
   // Add current building state to history
   state.history.push({
-    building: state.building?.toJSON(),
+    building: buildingData,
     timestamp: Date.now()
   });
   
@@ -324,8 +340,13 @@ export function undo() {
   
   // Restore building from history
   if (historyItem.building) {
-    const Building = window.Building; // Access from global (or import)
-    state.building = Building.fromJSON(historyItem.building);
+    // Check if Building class is available
+    if (typeof window !== 'undefined' && window.Building && window.Building.fromJSON) {
+      state.building = window.Building.fromJSON(historyItem.building);
+    } else {
+      // Fallback: store as plain object
+      state.building = historyItem.building;
+    }
     notify(['building', 'history']);
     return true;
   }
@@ -344,8 +365,13 @@ export function redo() {
   
   // Restore building from history
   if (historyItem.building) {
-    const Building = window.Building;
-    state.building = Building.fromJSON(historyItem.building);
+    // Check if Building class is available
+    if (typeof window !== 'undefined' && window.Building && window.Building.fromJSON) {
+      state.building = window.Building.fromJSON(historyItem.building);
+    } else {
+      // Fallback: store as plain object
+      state.building = historyItem.building;
+    }
     notify(['building', 'history']);
     return true;
   }
@@ -371,11 +397,19 @@ export function canRedo() {
  * Serialize state to JSON
  */
 export function serializeState() {
+  // Convert building to JSON if it exists and has toJSON method
+  let buildingData = null;
+  if (state.building) {
+    buildingData = typeof state.building.toJSON === 'function' 
+      ? state.building.toJSON() 
+      : state.building;
+  }
+  
   return JSON.stringify({
     postcode: state.postcode,
     propertyType: state.propertyType,
     climateData: state.climateData,
-    building: state.building?.toJSON(),
+    building: buildingData,
     modifications: state.modifications,
     pricing: {
       selectedSystem: state.pricing.selectedSystem,
@@ -393,8 +427,13 @@ export function deserializeState(json) {
     
     // Restore building if present
     if (data.building) {
-      const Building = window.Building;
-      state.building = Building.fromJSON(data.building);
+      // Check if Building class is available
+      if (typeof window !== 'undefined' && window.Building && window.Building.fromJSON) {
+        state.building = window.Building.fromJSON(data.building);
+      } else {
+        // Fallback: store as plain object
+        state.building = data.building;
+      }
     }
     
     // Restore other state
