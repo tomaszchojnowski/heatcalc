@@ -201,29 +201,20 @@ export class HeatLossCalculator {
   /**
    * Get internal design temperature for space
    * Bedrooms are typically designed for 18°C, other rooms 21°C
-   *
+   */
   getInternalTemp(space) {
+    // Check if climate has internal temps defined
+    if (!this.climate.internalDesignTemp) {
+      console.error('Climate missing internalDesignTemp!', this.climate);
+      return 21; // Default fallback
+    }
+    
     const spaceName = space.name.toLowerCase();
-    if (spaceName.includes('bedroom') || spaceName.includes('bed')) {
-      return this.climate.internalDesignTempBedroom;
+    if (spaceName.includes('bedroom') || spaceName.includes('bed ')) {
+      return this.climate.internalDesignTempBedroom || 18;
     }
-    return this.climate.internalDesignTemp;
+    return this.climate.internalDesignTemp || 21;
   }
-     */
-  getInternalTemp(space) {
-    const name = (space.name ?? '').toLowerCase();
-  
-    if (name.includes('bedroom') || name.includes('bed')) {
-      return this.climate.internalDesignTempBedroom ?? this.climate.internalDesignTemp;
-    }
-  
-    return this.climate.internalDesignTemp ?? 21;
-  }
-
-
-
-
-
   
   /**
    * Calculate heat loss per m² for comparison
