@@ -204,7 +204,7 @@ export class HeatLossCalculator {
    */
   getInternalTemp(space) {
     const spaceName = space.name.toLowerCase();
-    if (spaceName.includes('bedroom') || spaceName.includes('bed ')) {
+    if (spaceName.includes('bedroom') || spaceName.includes('bed')) {
       return this.climate.internalDesignTempBedroom;
     }
     return this.climate.internalDesignTemp;
