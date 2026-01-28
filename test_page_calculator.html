@@ -1,5 +1,4 @@
 <!DOCTYPE html>
-
 <html lang="en">
 <head>
 <meta charset="UTF-8">
@@ -13,125 +12,124 @@
     padding: 20px;
     background: #f5f5f5;
   }
-
-h1, h2 {
-color: #333;
-}
-
-.section {
-background: white;
-padding: 20px;
-margin-bottom: 20px;
-border-radius: 8px;
-box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-}
-
-.grid {
-display: grid;
-grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-gap: 20px;
-}
-
-label {
-display: block;
-margin: 10px 0 5px;
-font-weight: bold;
-}
-
-select, input, button {
-padding: 8px;
-font-size: 14px;
-border: 1px solid #ccc;
-border-radius: 4px;
-}
-
-select, input {
-width: 100%;
-max-width: 400px;
-}
-
-button {
-background: #4CAF50;
-color: white;
-border: none;
-padding: 10px 20px;
-cursor: pointer;
-margin-top: 10px;
-margin-right: 10px;
-}
-
-button:hover {
-background: #45a049;
-}
-
-button.secondary {
-background: #2196F3;
-}
-
-button.secondary:hover {
-background: #0b7dda;
-}
-
-.results {
-margin-top: 20px;
-}
-
-.result-box {
-background: #e8f5e9;
-padding: 15px;
-margin: 10px 0;
-border-left: 4px solid #4CAF50;
-}
-
-.result-box.info {
-background: #e3f2fd;
-border-left-color: #2196F3;
-}
-
-.result-box h3 {
-margin-top: 0;
-}
-
-table {
-width: 100%;
-border-collapse: collapse;
-margin-top: 10px;
-}
-
-th, td {
-text-align: left;
-padding: 8px;
-border-bottom: 1px solid #ddd;
-}
-
-th {
-background: #f5f5f5;
-font-weight: bold;
-}
-
-.error {
-background: #ffebee;
-color: #c62828;
-padding: 10px;
-border-radius: 4px;
-border-left: 4px solid #c62828;
-}
-
-.success {
-background: #e8f5e9;
-color: #2e7d32;
-padding: 10px;
-border-radius: 4px;
-border-left: 4px solid #4CAF50;
-}
-
-.price {
-font-size: 24px;
-font-weight: bold;
-color: #4CAF50;
-}
+  
+  h1, h2 {
+    color: #333;
+  }
+  
+  .section {
+    background: white;
+    padding: 20px;
+    margin-bottom: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  }
+  
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 20px;
+  }
+  
+  label {
+    display: block;
+    margin: 10px 0 5px;
+    font-weight: bold;
+  }
+  
+  select, input, button {
+    padding: 8px;
+    font-size: 14px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+  }
+  
+  select, input {
+    width: 100%;
+    max-width: 400px;
+  }
+  
+  button {
+    background: #4CAF50;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    cursor: pointer;
+    margin-top: 10px;
+    margin-right: 10px;
+  }
+  
+  button:hover {
+    background: #45a049;
+  }
+  
+  button.secondary {
+    background: #2196F3;
+  }
+  
+  button.secondary:hover {
+    background: #0b7dda;
+  }
+  
+  .results {
+    margin-top: 20px;
+  }
+  
+  .result-box {
+    background: #e8f5e9;
+    padding: 15px;
+    margin: 10px 0;
+    border-left: 4px solid #4CAF50;
+  }
+  
+  .result-box.info {
+    background: #e3f2fd;
+    border-left-color: #2196F3;
+  }
+  
+  .result-box h3 {
+    margin-top: 0;
+  }
+  
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 10px;
+  }
+  
+  th, td {
+    text-align: left;
+    padding: 8px;
+    border-bottom: 1px solid #ddd;
+  }
+  
+  th {
+    background: #f5f5f5;
+    font-weight: bold;
+  }
+  
+  .error {
+    background: #ffebee;
+    color: #c62828;
+    padding: 10px;
+    border-radius: 4px;
+    border-left: 4px solid #c62828;
+  }
+  
+  .success {
+    background: #e8f5e9;
+    color: #2e7d32;
+    padding: 10px;
+    border-radius: 4px;
+    border-left: 4px solid #4CAF50;
+  }
+  
+  .price {
+    font-size: 24px;
+    font-weight: bold;
+    color: #4CAF50;
+  }
 </style>
-
 </head>
 <body>
 
@@ -139,22 +137,22 @@ color: #4CAF50;
 
 <div class="section">
   <h2>1. Select Property & Location</h2>
-
-<label for="postcode">Postcode:</label>
-<input type="text" id="postcode" placeholder="SW1A 1AA" value="SW1A 1AA">
-
-<label for="propertyType">Property Type:</label>
-<select id="propertyType">
-<option value="">– Select –</option>
-<option value="victorian_terrace">Victorian Terrace</option>
-<option value="semi_1930s">1930s Semi-Detached</option>
-<option value="postwar_detached">Post-War Detached</option>
-<option value="newbuild">New Build</option>
-<option value="flat">Flat/Apartment</option>
-</select>
-
-<button onclick="loadAndCalculate()">Load Property & Calculate</button>
-
+  
+  <label for="postcode">Postcode:</label>
+  <input type="text" id="postcode" placeholder="SW1A 1AA" value="SW1A 1AA">
+  
+  <label for="propertyType">Property Type:</label>
+  <select id="propertyType">
+    <option value="">-- Select --</option>
+    <option value="victorian_terrace">Victorian Terrace</option>
+    <option value="semi_1930s">1930s Semi-Detached</option>
+    <option value="postwar_detached">Post-War Detached</option>
+    <option value="newbuild">New Build</option>
+    <option value="flat">Flat/Apartment</option>
+  </select>
+  
+  <button onclick="loadAndCalculate()">Load Property & Calculate</button>
+  
   <div id="propertyInfo" class="results"></div>
 </div>
 
