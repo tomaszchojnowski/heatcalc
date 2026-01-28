@@ -187,13 +187,13 @@ let currentBuilding = null;
 let currentClimate = null;
 
 window.loadAndCalculate = function() {
-  alert('Function called!'); // Test if function runs at all
+ // alert('Function called!'); // Test if function runs at all
   
   const postcode = document.getElementById('postcode').value;
   const propertyType = document.getElementById('propertyType').value;
   
   console.log('Starting calculation...', { postcode, propertyType });
-  alert(`Postcode: ${postcode}, Property: ${propertyType}`); // Show values
+ // alert(`Postcode: ${postcode}, Property: ${propertyType}`); // Show values
   
   if (!postcode || !propertyType) {
     alert('Please enter postcode and select property type');
