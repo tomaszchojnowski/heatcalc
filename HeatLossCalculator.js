@@ -85,6 +85,12 @@ export class HeatLossCalculator {
     const internalTemp = this.getInternalTemp(space);
     const deltaT = internalTemp - this.climate.externalDesignTemp;
     
+    console.log(`Calculating heat loss for ${space.name}:`, {
+      internalTemp,
+      externalTemp: this.climate.externalDesignTemp,
+      deltaT
+    });
+    
     const heatLoss = {
       floor: 0,
       ceiling: 0,
@@ -103,6 +109,7 @@ export class HeatLossCalculator {
         space.floorArea,
         deltaT
       );
+      console.log(`  Floor loss: U=${space.floorConstruction.uValue}, A=${space.floorArea}, ΔT=${deltaT}, Loss=${heatLoss.floor}W`);
     }
     
     // Ceiling/roof heat loss
