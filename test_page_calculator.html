@@ -254,7 +254,16 @@ window.loadAndCalculate = function() {
     
     // 3. Calculate heat loss
     console.log('Calculating heat loss...');
-    const calculator = new HeatLossCalculator(currentClimate);
+    
+    // Create climate config with internal temps
+    const climateConfig = {
+      externalDesignTemp: currentClimate.externalDesignTemp,
+      internalDesignTemp: 21,
+      internalDesignTempBedroom: 18,
+      windExposure: currentClimate.windExposure
+    };
+    
+    const calculator = new HeatLossCalculator(climateConfig);
     console.log('Calculator created:', calculator);
     console.log('Calculator climate:', calculator.climate);
     
