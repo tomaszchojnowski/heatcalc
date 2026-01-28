@@ -264,15 +264,17 @@ function renderProperties() {
       </tr>
     `;
     
-    // Upper floors
-    html += `
-      <tr>
-        <td class="element-type">Upper Floors</td>
-        <td>${template.construction.floor.upper.description}</td>
-        <td>-</td>
-        <td><span class="uvalue ${getUValueClass(template.construction.floor.upper.uValue)}">${template.construction.floor.upper.uValue.toFixed(2)}</span></td>
-      </tr>
-    `;
+    // Upper floors (only if exists)
+    if (template.construction.floor.upper) {
+      html += `
+        <tr>
+          <td class="element-type">Upper Floors</td>
+          <td>${template.construction.floor.upper.description}</td>
+          <td>-</td>
+          <td><span class="uvalue ${getUValueClass(template.construction.floor.upper.uValue)}">${template.construction.floor.upper.uValue.toFixed(2)}</span></td>
+        </tr>
+      `;
+    }
     
     // Roof
     html += `
