@@ -230,6 +230,14 @@ window.loadAndCalculate = function() {
     currentBuilding = new Building(template);
     console.log('Building created:', currentBuilding);
     
+    // Check first space construction
+    const firstSpace = currentBuilding.getAllSpaces()[0];
+    console.log('First space:', firstSpace);
+    console.log('First space floor construction:', firstSpace.floorConstruction);
+    console.log('First space ceiling construction:', firstSpace.ceilingConstruction);
+    console.log('First space wall construction:', firstSpace.wallConstruction);
+    console.log('First space window characteristics:', firstSpace.windowCharacteristics);
+    
     const floorArea = currentBuilding.getTotalFloorArea();
     console.log('Floor area:', floorArea);
     
