@@ -1,0 +1,397 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>State Management Test</title>
+<style>
+  body {
+    font-family: Arial, sans-serif;
+    max-width: 1000px;
+    margin: 20px auto;
+    padding: 20px;
+    background: #f5f5f5;
+  }
+  
+  .section {
+    background: white;
+    padding: 20px;
+    margin-bottom: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  }
+  
+  button {
+    background: #4CAF50;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    cursor: pointer;
+    margin: 5px;
+    border-radius: 4px;
+  }
+  
+  button:hover {
+    background: #45a049;
+  }
+  
+  button:disabled {
+    background: #ccc;
+    cursor: not-allowed;
+  }
+  
+  button.secondary {
+    background: #2196F3;
+  }
+  
+  button.danger {
+    background: #f44336;
+  }
+  
+  .log {
+    background: #f5f5f5;
+    padding: 10px;
+    margin: 10px 0;
+    border-radius: 4px;
+    font-family: monospace;
+    font-size: 12px;
+    max-height: 300px;
+    overflow-y: auto;
+  }
+  
+  .log-entry {
+    padding: 5px;
+    border-bottom: 1px solid #ddd;
+  }
+  
+  .success {
+    color: #4CAF50;
+  }
+  
+  .error {
+    color: #f44336;
+  }
+  
+  input {
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    width: 200px;
+    margin: 5px;
+  }
+</style>
+</head>
+<body>
+
+<h1>State Management Test</h1>
+
+<div class="section">
+  <h2>1. Basic State Operations</h2>
+  <button onclick="testSetState()">Set State</button>
+  <button onclick="testGetState()">Get State</button>
+  <button onclick="testGetValue()">Get Specific Value</button>
+  <button onclick="testResetState()">Reset State</button>
+  
+  <div id="basicResults" class="log"></div>
+</div>
+
+<div class="section">
+  <h2>2. Observer Pattern</h2>
+  <button onclick="subscribeToAll()">Subscribe to All Changes</button>
+  <button onclick="subscribeToSpecific()">Subscribe to Specific Paths</button>
+  <button onclick="unsubscribeAll()">Unsubscribe All</button>
+  <button onclick="triggerStateChange()">Trigger State Change</button>
+  
+  <div id="observerResults" class="log"></div>
+</div>
+
+<div class="section">
+  <h2>3. Building Integration</h2>
+  <button onclick="createTestBuilding()">Create Test Building</button>
+  <button onclick="modifyBuilding()">Modify Building (adds to history)</button>
+  <button onclick="showBuildingState()">Show Building State</button>
+  
+  <div id="buildingResults" class="log"></div>
+</div>
+
+<div class="section">
+  <h2>4. Undo/Redo</h2>
+  <button onclick="testUndo()" id="undoBtn" disabled>Undo</button>
+  <button onclick="testRedo()" id="redoBtn" disabled>Redo</button>
+  <button onclick="showHistory()">Show History</button>
+  
+  <p>History Index: <span id="historyIndex">-</span> / <span id="historyLength">-</span></p>
+  
+  <div id="historyResults" class="log"></div>
+</div>
+
+<div class="section">
+  <h2>5. Persistence</h2>
+  <button onclick="testSave()">Save to LocalStorage</button>
+  <button onclick="testLoad()">Load from LocalStorage</button>
+  <button onclick="testClear()">Clear LocalStorage</button>
+  <button class="secondary" onclick="testSerialize()">Serialize to JSON</button>
+  
+  <div id="persistenceResults" class="log"></div>
+</div>
+
+<div class="section">
+  <h2>6. Auto-Save</h2>
+  <button onclick="enableAutoSave()">Enable Auto-Save (5sec)</button>
+  <button onclick="disableAutoSave()">Disable Auto-Save</button>
+  
+  <p>Status: <span id="autoSaveStatus">Disabled</span></p>
+  
+  <div id="autoSaveResults" class="log"></div>
+</div>
+
+<script type="module">
+import { getTemplate } from './propertyTemplates.js';
+import { Building } from './Building.js';
+import {
+  subscribe,
+  setState,
+  getState,
+  getValue,
+  resetState,
+  setPostcode,
+  setBuilding,
+  updateBuilding,
+  setHeatLoss,
+  setPricing,
+  undo,
+  redo,
+  canUndo,
+  canRedo,
+  saveToLocalStorage,
+  loadFromLocalStorage,
+  clearLocalStorage,
+  serializeState,
+  deserializeState,
+  enableAutoSave as enableAutoSaveFunc,
+  disableAutoSave as disableAutoSaveFunc,
+  debugState
+} from './state.js';
+
+// Make Building available globally
+window.Building = Building;
+
+// Log helper
+function log(elementId, message, type = 'info') {
+  const el = document.getElementById(elementId);
+  const entry = document.createElement('div');
+  entry.className = `log-entry ${type}`;
+  entry.textContent = `[${new Date().toLocaleTimeString()}] ${message}`;
+  el.insertBefore(entry, el.firstChild);
+}
+
+// Store subscriptions
+const subscriptions = [];
+
+// Update undo/redo buttons
+function updateButtons() {
+  document.getElementById('undoBtn').disabled = !canUndo();
+  document.getElementById('redoBtn').disabled = !canRedo();
+  
+  const state = getState();
+  document.getElementById('historyIndex').textContent = state.historyIndex;
+  document.getElementById('historyLength').textContent = state.history.length;
+}
+
+// Subscribe to state changes to update buttons
+subscribe((state) => {
+  updateButtons();
+});
+
+// 1. Basic State Operations
+window.testSetState = function() {
+  setState({
+    postcode: 'SW1A 1AA',
+    propertyType: 'victorian_terrace'
+  });
+  log('basicResults', 'State updated with postcode and property type', 'success');
+};
+
+window.testGetState = function() {
+  const state = getState();
+  log('basicResults', `Current state: ${JSON.stringify(state, null, 2)}`, 'info');
+};
+
+window.testGetValue = function() {
+  const postcode = getValue('postcode');
+  const propertyType = getValue('propertyType');
+  log('basicResults', `Postcode: ${postcode}, Property: ${propertyType}`, 'info');
+};
+
+window.testResetState = function() {
+  resetState();
+  log('basicResults', 'State reset to initial values', 'success');
+};
+
+// 2. Observer Pattern
+window.subscribeToAll = function() {
+  const unsub = subscribe((state) => {
+    log('observerResults', `Observer fired (all): ${JSON.stringify(state.postcode)}`, 'success');
+  });
+  subscriptions.push(unsub);
+  log('observerResults', 'Subscribed to all state changes', 'info');
+};
+
+window.subscribeToSpecific = function() {
+  const unsub = subscribe((state) => {
+    log('observerResults', `Observer fired (building only): Building exists: ${!!state.building}`, 'success');
+  }, ['building']);
+  subscriptions.push(unsub);
+  log('observerResults', 'Subscribed to building changes only', 'info');
+};
+
+window.unsubscribeAll = function() {
+  subscriptions.forEach(unsub => unsub());
+  subscriptions.length = 0;
+  log('observerResults', 'All observers unsubscribed', 'info');
+};
+
+window.triggerStateChange = function() {
+  setState({
+    postcode: `SW${Math.floor(Math.random() * 10)}A 1AA`
+  });
+  log('observerResults', 'State changed - check if observers fired above', 'info');
+};
+
+// 3. Building Integration
+window.createTestBuilding = function() {
+  try {
+    const template = getTemplate('victorian_terrace');
+    const building = new Building(template);
+    
+    setBuilding(building);
+    
+    log('buildingResults', `Building created: ${building.propertyName}, ${building.getAllSpaces().length} spaces`, 'success');
+  } catch (error) {
+    log('buildingResults', `Error: ${error.message}`, 'error');
+  }
+};
+
+window.modifyBuilding = function() {
+  const state = getState();
+  
+  if (!state.building) {
+    log('buildingResults', 'No building in state. Create one first.', 'error');
+    return;
+  }
+  
+  try {
+    // Recreate building from JSON (simulate modification)
+    const building = Building.fromJSON(state.building);
+    
+    // Modify first space dimensions
+    const spaces = building.getAllSpaces();
+    if (spaces.length > 0) {
+      const oldWidth = spaces[0].width;
+      spaces[0].setDimensions(spaces[0].width + 0.5, spaces[0].depth);
+      
+      // Update state (this should add to history)
+      updateBuilding(building);
+      
+      log('buildingResults', `Modified space: ${oldWidth}m → ${spaces[0].width}m (added to history)`, 'success');
+    }
+  } catch (error) {
+    log('buildingResults', `Error: ${error.message}`, 'error');
+  }
+};
+
+window.showBuildingState = function() {
+  const state = getState();
+  
+  if (!state.building) {
+    log('buildingResults', 'No building in state', 'info');
+    return;
+  }
+  
+  log('buildingResults', `Building: ${state.building.propertyName}, Spaces: ${state.building.getAllSpaces ? state.building.getAllSpaces().length : 'N/A'}`, 'info');
+};
+
+// 4. Undo/Redo
+window.testUndo = function() {
+  if (undo()) {
+    log('historyResults', 'Undo successful', 'success');
+    showBuildingState();
+  } else {
+    log('historyResults', 'Cannot undo (no history)', 'error');
+  }
+};
+
+window.testRedo = function() {
+  if (redo()) {
+    log('historyResults', 'Redo successful', 'success');
+    showBuildingState();
+  } else {
+    log('historyResults', 'Cannot redo', 'error');
+  }
+};
+
+window.showHistory = function() {
+  const state = getState();
+  log('historyResults', `History: ${state.history.length} items, Index: ${state.historyIndex}`, 'info');
+  
+  state.history.forEach((item, index) => {
+    const marker = index === state.historyIndex ? '👉' : '  ';
+    log('historyResults', `${marker} [${index}] ${new Date(item.timestamp).toLocaleTimeString()}`, 'info');
+  });
+};
+
+// 5. Persistence
+window.testSave = function() {
+  const success = saveToLocalStorage();
+  if (success) {
+    log('persistenceResults', 'State saved to localStorage', 'success');
+  } else {
+    log('persistenceResults', 'Failed to save state', 'error');
+  }
+};
+
+window.testLoad = function() {
+  const success = loadFromLocalStorage();
+  if (success) {
+    log('persistenceResults', 'State loaded from localStorage', 'success');
+    const state = getState();
+    log('persistenceResults', `Loaded: Postcode=${state.postcode}, Building=${state.building ? 'Yes' : 'No'}`, 'info');
+  } else {
+    log('persistenceResults', 'No saved state found', 'error');
+  }
+};
+
+window.testClear = function() {
+  clearLocalStorage();
+  log('persistenceResults', 'LocalStorage cleared', 'success');
+};
+
+window.testSerialize = function() {
+  const json = serializeState();
+  log('persistenceResults', `Serialized (${json.length} chars): ${json.substring(0, 100)}...`, 'info');
+};
+
+// 6. Auto-Save
+window.enableAutoSave = function() {
+  enableAutoSaveFunc(5000); // 5 seconds for testing
+  document.getElementById('autoSaveStatus').textContent = 'Enabled (5sec)';
+  log('autoSaveResults', 'Auto-save enabled (every 5 seconds)', 'success');
+};
+
+window.disableAutoSave = function() {
+  disableAutoSaveFunc();
+  document.getElementById('autoSaveStatus').textContent = 'Disabled';
+  log('autoSaveResults', 'Auto-save disabled', 'info');
+};
+
+// Initial button state
+updateButtons();
+
+console.log('State management test loaded');
+console.log('Type debugState() in console to see full state');
+window.debugState = debugState;
+
+</script>
+
+</body>
+</html>
