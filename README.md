@@ -7,6 +7,9 @@ https://tomaszchojnowski.github.io/heatcalc/heatcalc_app_mockup.html
 Test page:
 https://tomaszchojnowski.github.io/heatcalc/test_page_calculator.html
 
+State Test page:
+https://tomaszchojnowski.github.io/heatcalc/test_state_management.html
+
 File Structure Plan:
 
 ```
