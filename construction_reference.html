@@ -1,0 +1,560 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Construction Reference - UK Property Types</title>
+<style>
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    max-width: 1200px;
+    margin: 20px auto;
+    padding: 20px;
+    background: #f5f5f5;
+  }
+  
+  h1 {
+    color: #333;
+    border-bottom: 3px solid #667eea;
+    padding-bottom: 10px;
+  }
+  
+  h2 {
+    color: #667eea;
+    margin-top: 30px;
+  }
+  
+  .property-section {
+    background: white;
+    padding: 20px;
+    margin-bottom: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  }
+  
+  .property-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+    padding-bottom: 10px;
+    border-bottom: 2px solid #e0e0e0;
+  }
+  
+  .property-name {
+    font-size: 20px;
+    font-weight: 700;
+    color: #333;
+  }
+  
+  .property-era {
+    font-size: 14px;
+    color: #666;
+    font-style: italic;
+  }
+  
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 10px 0;
+  }
+  
+  th {
+    background: #f5f5f5;
+    text-align: left;
+    padding: 10px;
+    font-weight: 600;
+    border-bottom: 2px solid #ddd;
+  }
+  
+  td {
+    padding: 10px;
+    border-bottom: 1px solid #eee;
+  }
+  
+  .element-type {
+    font-weight: 600;
+    color: #667eea;
+  }
+  
+  .uvalue {
+    font-weight: 700;
+    color: #333;
+  }
+  
+  .uvalue.good {
+    color: #4CAF50;
+  }
+  
+  .uvalue.poor {
+    color: #f44336;
+  }
+  
+  .uvalue.medium {
+    color: #ff9800;
+  }
+  
+  .materials-section {
+    background: #e8f5e9;
+    padding: 20px;
+    border-radius: 8px;
+    margin-top: 30px;
+  }
+  
+  .material-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 15px;
+    margin-top: 15px;
+  }
+  
+  .material-card {
+    background: white;
+    padding: 15px;
+    border-radius: 6px;
+    border-left: 4px solid #4CAF50;
+  }
+  
+  .material-name {
+    font-weight: 700;
+    color: #333;
+    margin-bottom: 5px;
+  }
+  
+  .material-uvalue {
+    font-size: 18px;
+    font-weight: 700;
+    color: #4CAF50;
+  }
+  
+  .material-desc {
+    font-size: 12px;
+    color: #666;
+    margin-top: 5px;
+  }
+</style>
+</head>
+<body>
+
+<h1>🏠 UK Property Construction Reference</h1>
+
+<div class="property-section">
+  <div class="property-header">
+    <span class="property-name">Victorian Terrace</span>
+    <span class="property-era">1837-1901</span>
+  </div>
+  
+  <table>
+    <tr>
+      <th>Element</th>
+      <th>Type</th>
+      <th>Thickness</th>
+      <th>U-Value (W/m²K)</th>
+    </tr>
+    <tr>
+      <td class="element-type">External Walls</td>
+      <td>Solid Brick (no cavity)</td>
+      <td>0.23m</td>
+      <td><span class="uvalue poor">2.10</span></td>
+    </tr>
+    <tr>
+      <td class="element-type">Party Wall</td>
+      <td>Solid Brick (shared)</td>
+      <td>0.23m</td>
+      <td><span class="uvalue">0.00</span> (no heat loss)</td>
+    </tr>
+    <tr>
+      <td class="element-type">Internal Walls</td>
+      <td>Lath & Plaster</td>
+      <td>0.10m</td>
+      <td><span class="uvalue">1.50</span></td>
+    </tr>
+    <tr>
+      <td class="element-type">Ground Floor</td>
+      <td>Suspended Timber (ventilated underfloor)</td>
+      <td>-</td>
+      <td><span class="uvalue medium">0.70</span></td>
+    </tr>
+    <tr>
+      <td class="element-type">Upper Floors</td>
+      <td>Timber Joists</td>
+      <td>-</td>
+      <td><span class="uvalue">1.50</span></td>
+    </tr>
+    <tr>
+      <td class="element-type">Roof</td>
+      <td>Pitched Slate (uninsulated loft)</td>
+      <td>-</td>
+      <td><span class="uvalue poor">2.30</span></td>
+    </tr>
+    <tr>
+      <td class="element-type">Windows</td>
+      <td>Single Glazed (timber sash)</td>
+      <td>-</td>
+      <td><span class="uvalue poor">5.00</span></td>
+    </tr>
+  </table>
+</div>
+
+<div class="property-section">
+  <div class="property-header">
+    <span class="property-name">1930s Semi-Detached</span>
+    <span class="property-era">1919-1939</span>
+  </div>
+  
+  <table>
+    <tr>
+      <th>Element</th>
+      <th>Type</th>
+      <th>Thickness</th>
+      <th>U-Value (W/m²K)</th>
+    </tr>
+    <tr>
+      <td class="element-type">External Walls</td>
+      <td>Cavity Wall (uninsulated)</td>
+      <td>0.28m</td>
+      <td><span class="uvalue medium">1.50</span></td>
+    </tr>
+    <tr>
+      <td class="element-type">Party Wall</td>
+      <td>Cavity Wall (shared)</td>
+      <td>0.28m</td>
+      <td><span class="uvalue">0.00</span> (no heat loss)</td>
+    </tr>
+    <tr>
+      <td class="element-type">Internal Walls</td>
+      <td>Brick + Plaster</td>
+      <td>0.10m</td>
+      <td><span class="uvalue">1.50</span></td>
+    </tr>
+    <tr>
+      <td class="element-type">Ground Floor</td>
+      <td>Solid Concrete Slab</td>
+      <td>-</td>
+      <td><span class="uvalue medium">0.80</span></td>
+    </tr>
+    <tr>
+      <td class="element-type">Upper Floors</td>
+      <td>Timber Joists</td>
+      <td>-</td>
+      <td><span class="uvalue">1.50</span></td>
+    </tr>
+    <tr>
+      <td class="element-type">Roof</td>
+      <td>Pitched Tile (minimal insulation)</td>
+      <td>-</td>
+      <td><span class="uvalue poor">1.80</span></td>
+    </tr>
+    <tr>
+      <td class="element-type">Windows</td>
+      <td>Single Glazed (timber casement)</td>
+      <td>-</td>
+      <td><span class="uvalue poor">4.80</span></td>
+    </tr>
+  </table>
+</div>
+
+<div class="property-section">
+  <div class="property-header">
+    <span class="property-name">Post-War Detached</span>
+    <span class="property-era">1945-1980</span>
+  </div>
+  
+  <table>
+    <tr>
+      <th>Element</th>
+      <th>Type</th>
+      <th>Thickness</th>
+      <th>U-Value (W/m²K)</th>
+    </tr>
+    <tr>
+      <td class="element-type">External Walls</td>
+      <td>Cavity Wall (partial fill insulation)</td>
+      <td>0.28m</td>
+      <td><span class="uvalue medium">1.20</span></td>
+    </tr>
+    <tr>
+      <td class="element-type">Internal Walls</td>
+      <td>Lightweight Blockwork + Plaster</td>
+      <td>0.10m</td>
+      <td><span class="uvalue">1.80</span></td>
+    </tr>
+    <tr>
+      <td class="element-type">Ground Floor</td>
+      <td>Concrete Slab (minimal insulation)</td>
+      <td>-</td>
+      <td><span class="uvalue medium">0.60</span></td>
+    </tr>
+    <tr>
+      <td class="element-type">Upper Floors</td>
+      <td>Timber Joists</td>
+      <td>-</td>
+      <td><span class="uvalue">1.50</span></td>
+    </tr>
+    <tr>
+      <td class="element-type">Roof</td>
+      <td>Pitched Tile (50-100mm loft insulation)</td>
+      <td>-</td>
+      <td><span class="uvalue medium">0.60</span></td>
+    </tr>
+    <tr>
+      <td class="element-type">Windows</td>
+      <td>Early Double Glazing (timber)</td>
+      <td>-</td>
+      <td><span class="uvalue medium">3.00</span></td>
+    </tr>
+  </table>
+</div>
+
+<div class="property-section">
+  <div class="property-header">
+    <span class="property-name">New Build</span>
+    <span class="property-era">2010-present</span>
+  </div>
+  
+  <table>
+    <tr>
+      <th>Element</th>
+      <th>Type</th>
+      <th>Thickness</th>
+      <th>U-Value (W/m²K)</th>
+    </tr>
+    <tr>
+      <td class="element-type">External Walls</td>
+      <td>Cavity Wall (full insulation, Building Regs)</td>
+      <td>0.30m</td>
+      <td><span class="uvalue good">0.28</span></td>
+    </tr>
+    <tr>
+      <td class="element-type">Internal Walls</td>
+      <td>Timber Stud + Plasterboard</td>
+      <td>0.10m</td>
+      <td><span class="uvalue">2.00</span></td>
+    </tr>
+    <tr>
+      <td class="element-type">Ground Floor</td>
+      <td>Insulated Concrete Slab</td>
+      <td>-</td>
+      <td><span class="uvalue good">0.22</span></td>
+    </tr>
+    <tr>
+      <td class="element-type">Upper Floors</td>
+      <td>Engineered Joists</td>
+      <td>-</td>
+      <td><span class="uvalue">1.50</span></td>
+    </tr>
+    <tr>
+      <td class="element-type">Roof</td>
+      <td>Insulated Truss (270mm loft insulation)</td>
+      <td>-</td>
+      <td><span class="uvalue good">0.16</span></td>
+    </tr>
+    <tr>
+      <td class="element-type">Windows</td>
+      <td>Low-E Double Glazing (uPVC)</td>
+      <td>-</td>
+      <td><span class="uvalue good">1.40</span></td>
+    </tr>
+  </table>
+</div>
+
+<div class="property-section">
+  <div class="property-header">
+    <span class="property-name">Flat/Apartment</span>
+    <span class="property-era">Various</span>
+  </div>
+  
+  <table>
+    <tr>
+      <th>Element</th>
+      <th>Type</th>
+      <th>Thickness</th>
+      <th>U-Value (W/m²K)</th>
+    </tr>
+    <tr>
+      <td class="element-type">External Walls</td>
+      <td>Cavity Wall (partial insulation)</td>
+      <td>0.28m</td>
+      <td><span class="uvalue medium">1.50</span></td>
+    </tr>
+    <tr>
+      <td class="element-type">Party Walls</td>
+      <td>Blockwork (to adjacent flats)</td>
+      <td>0.20m</td>
+      <td><span class="uvalue">0.00</span> (no heat loss)</td>
+    </tr>
+    <tr>
+      <td class="element-type">Internal Walls</td>
+      <td>Blockwork + Plaster</td>
+      <td>0.10m</td>
+      <td><span class="uvalue">1.80</span></td>
+    </tr>
+    <tr>
+      <td class="element-type">Floor</td>
+      <td>Concrete (flat below - heated)</td>
+      <td>-</td>
+      <td><span class="uvalue">0.00</span> (no heat loss)</td>
+    </tr>
+    <tr>
+      <td class="element-type">Ceiling</td>
+      <td>Concrete (flat above - heated)</td>
+      <td>-</td>
+      <td><span class="uvalue">0.00</span> (no heat loss)</td>
+    </tr>
+    <tr>
+      <td class="element-type">Windows</td>
+      <td>Double Glazing (uPVC)</td>
+      <td>-</td>
+      <td><span class="uvalue medium">3.00</span></td>
+    </tr>
+  </table>
+</div>
+
+<h2>📊 Standard Construction Materials</h2>
+
+<div class="materials-section">
+  <h3>Wall Construction Types</h3>
+  
+  <div class="material-grid">
+    <div class="material-card">
+      <div class="material-name">Solid Brick (Uninsulated)</div>
+      <div class="material-uvalue">2.10 W/m²K</div>
+      <div class="material-desc">Victorian/pre-1920s. Single brick leaf, no cavity.</div>
+    </div>
+    
+    <div class="material-card">
+      <div class="material-name">Cavity Wall (Uninsulated)</div>
+      <div class="material-uvalue">1.50 W/m²K</div>
+      <div class="material-desc">1920s-1970s. Two brick/block leaves, empty cavity.</div>
+    </div>
+    
+    <div class="material-card">
+      <div class="material-name">Cavity Wall (Partial Fill)</div>
+      <div class="material-uvalue">1.20 W/m²K</div>
+      <div class="material-desc">1970s-1990s. Some cavity insulation (50-75mm).</div>
+    </div>
+    
+    <div class="material-card">
+      <div class="material-name">Cavity Wall (Full Fill)</div>
+      <div class="material-uvalue">0.28 W/m²K</div>
+      <div class="material-desc">2000s+. Full cavity insulation, Building Regs compliant.</div>
+    </div>
+    
+    <div class="material-card">
+      <div class="material-name">Internal Insulation (Retrofit)</div>
+      <div class="material-uvalue">0.30 W/m²K</div>
+      <div class="material-desc">Insulated plasterboard added to internal face.</div>
+    </div>
+    
+    <div class="material-card">
+      <div class="material-name">External Insulation (Retrofit)</div>
+      <div class="material-uvalue">0.25 W/m²K</div>
+      <div class="material-desc">External wall insulation (EWI) with render.</div>
+    </div>
+  </div>
+  
+  <h3 style="margin-top: 30px;">Floor Construction Types</h3>
+  
+  <div class="material-grid">
+    <div class="material-card">
+      <div class="material-name">Suspended Timber (Uninsulated)</div>
+      <div class="material-uvalue">0.70 W/m²K</div>
+      <div class="material-desc">Victorian/Edwardian. Ventilated void below.</div>
+    </div>
+    
+    <div class="material-card">
+      <div class="material-name">Solid Concrete (Uninsulated)</div>
+      <div class="material-uvalue">0.80 W/m²K</div>
+      <div class="material-desc">1930s+. Direct to ground, no insulation.</div>
+    </div>
+    
+    <div class="material-card">
+      <div class="material-name">Concrete Slab (Minimal Insulation)</div>
+      <div class="material-uvalue">0.60 W/m²K</div>
+      <div class="material-desc">Post-war. Some edge insulation.</div>
+    </div>
+    
+    <div class="material-card">
+      <div class="material-name">Insulated Slab</div>
+      <div class="material-uvalue">0.22 W/m²K</div>
+      <div class="material-desc">Modern. 100mm+ insulation, Building Regs.</div>
+    </div>
+    
+    <div class="material-card">
+      <div class="material-name">Floor Insulation (Retrofit)</div>
+      <div class="material-uvalue">0.18 W/m²K</div>
+      <div class="material-desc">Added insulation to existing floor.</div>
+    </div>
+  </div>
+  
+  <h3 style="margin-top: 30px;">Roof Construction Types</h3>
+  
+  <div class="material-grid">
+    <div class="material-card">
+      <div class="material-name">Uninsulated Loft</div>
+      <div class="material-uvalue">2.30 W/m²K</div>
+      <div class="material-desc">Pre-1960s. No insulation in loft space.</div>
+    </div>
+    
+    <div class="material-card">
+      <div class="material-name">Minimal Loft Insulation</div>
+      <div class="material-uvalue">1.80 W/m²K</div>
+      <div class="material-desc">1960s-1980s. 25-50mm mineral wool.</div>
+    </div>
+    
+    <div class="material-card">
+      <div class="material-name">Part Insulated Loft</div>
+      <div class="material-uvalue">0.60 W/m²K</div>
+      <div class="material-desc">1980s-2000s. 50-100mm insulation.</div>
+    </div>
+    
+    <div class="material-card">
+      <div class="material-name">Standard Loft Insulation</div>
+      <div class="material-uvalue">0.16 W/m²K</div>
+      <div class="material-desc">Modern standard. 270mm mineral wool.</div>
+    </div>
+    
+    <div class="material-card">
+      <div class="material-name">Enhanced Loft Insulation</div>
+      <div class="material-uvalue">0.12 W/m²K</div>
+      <div class="material-desc">Deep retrofit. 300-400mm insulation.</div>
+    </div>
+  </div>
+  
+  <h3 style="margin-top: 30px;">Window Types</h3>
+  
+  <div class="material-grid">
+    <div class="material-card">
+      <div class="material-name">Single Glazed</div>
+      <div class="material-uvalue">5.00 W/m²K</div>
+      <div class="material-desc">Original windows, timber or metal frames.</div>
+    </div>
+    
+    <div class="material-card">
+      <div class="material-name">Early Double Glazed</div>
+      <div class="material-uvalue">3.00 W/m²K</div>
+      <div class="material-desc">1970s-1990s. Basic double glazing.</div>
+    </div>
+    
+    <div class="material-card">
+      <div class="material-name">Modern Double Glazed</div>
+      <div class="material-uvalue">1.80 W/m²K</div>
+      <div class="material-desc">2000s. Argon filled, uPVC frames.</div>
+    </div>
+    
+    <div class="material-card">
+      <div class="material-name">Low-E Double Glazed</div>
+      <div class="material-uvalue">1.40 W/m²K</div>
+      <div class="material-desc">Current standard. Low-emissivity coating.</div>
+    </div>
+    
+    <div class="material-card">
+      <div class="material-name">Triple Glazed</div>
+      <div class="material-uvalue">0.80 W/m²K</div>
+      <div class="material-desc">High performance. Passivhaus standard.</div>
+    </div>
+  </div>
+</div>
+
+</body>
+</html>
