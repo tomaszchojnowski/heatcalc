@@ -211,14 +211,15 @@ export class HeatLossCalculator {
   }
      */
   getInternalTemp(space) {
-    const name = (space.name ?? '').toString().toLowerCase();
+    const name = (space.name ?? '').toLowerCase();
   
     if (name.includes('bedroom') || name.includes('bed')) {
-      return this.climate.internalDesignTempBedroom;
+      return this.climate.internalDesignTempBedroom ?? this.climate.internalDesignTemp;
     }
   
-    return this.climate.internalDesignTemp;
+    return this.climate.internalDesignTemp ?? 21;
   }
+
 
 
 
