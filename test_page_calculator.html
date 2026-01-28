@@ -325,7 +325,11 @@ window.loadAndCalculate = function() {
     hpHtml += '<h3>Heat Pump System</h3>';
     hpHtml += `<p><strong>Capacity:</strong> ${heatPumpCost.capacity} kW</p>`;
     hpHtml += `<p><strong>Equipment:</strong> £${heatPumpCost.breakdown.heatPumpUnit.toLocaleString()}</p>`;
-    hpHtml += `<p><strong>Radiators (${heatPumpCost.radiatorCount}×):</strong> £${heatPumpCost.breakdown.radiators.toLocaleString()}</p>`;
+    
+    // Calculate total radiator cost from breakdown array
+    const hpRadiatorTotal = heatPumpCost.breakdown.radiators.reduce((sum, rad) => sum + rad.cost, 0);
+    hpHtml += `<p><strong>Radiators (${heatPumpCost.radiatorCount}×):</strong> £${hpRadiatorTotal.toLocaleString()}</p>`;
+    
     hpHtml += `<p><strong>Pipework:</strong> £${heatPumpCost.breakdown.pipework.toLocaleString()}</p>`;
     hpHtml += `<p><strong>Hot Water Cylinder:</strong> £${heatPumpCost.breakdown.hotWaterCylinder.toLocaleString()}</p>`;
     hpHtml += `<p><strong>Controls:</strong> £${heatPumpCost.breakdown.controls.toLocaleString()}</p>`;
@@ -347,7 +351,11 @@ window.loadAndCalculate = function() {
     boilerHtml += '<h3>Gas Boiler System</h3>';
     boilerHtml += `<p><strong>Capacity:</strong> ${boilerCost.capacity} kW</p>`;
     boilerHtml += `<p><strong>Equipment:</strong> £${boilerCost.breakdown.boilerUnit.toLocaleString()}</p>`;
-    boilerHtml += `<p><strong>Radiators (${boilerCost.radiatorCount}×):</strong> £${boilerCost.breakdown.radiators.toLocaleString()}</p>`;
+    
+    // Calculate total radiator cost from breakdown array
+    const boilerRadiatorTotal = boilerCost.breakdown.radiators.reduce((sum, rad) => sum + rad.cost, 0);
+    boilerHtml += `<p><strong>Radiators (${boilerCost.radiatorCount}×):</strong> £${boilerRadiatorTotal.toLocaleString()}</p>`;
+    
     boilerHtml += `<p><strong>Pipework:</strong> £${boilerCost.breakdown.pipework.toLocaleString()}</p>`;
     boilerHtml += `<p><strong>Controls:</strong> £${boilerCost.breakdown.controls.toLocaleString()}</p>`;
     boilerHtml += `<p><strong>Labor (${boilerCost.installationDays} days):</strong> £${boilerCost.breakdown.labor.toLocaleString()}</p>`;
