@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>HeatCalc - Home Heating Assessment</title>
+<link rel="stylesheet" href="./styles.css">
+</head>
+<body>
+
+<!-- App Container -->
+<div id="app"></div>
+
+<!-- Main Application Script -->
+<script type="module">
+import { initRouter, registerScreen, navigateTo } from './router.js';
+import { InputScreen } from './InputScreen.js';
+import { LoadingScreen } from './LoadingScreen.js';
+import { ResultsScreen } from './ResultsScreen.js';
+import { enableAutoSave } from './state.js';
+import { Building } from './Building.js';
+
+// Make Building available globally for state management
+window.Building = Building;
+
+console.log('🏠 HeatCalc App Starting...');
+
+// Initialize router
+initRouter({
+  container: document.getElementById('app'),
+  defaultScreen: 'input',
+  onNavigate: (screenName, data) => {
+    console.log(`📍 Navigation: → ${screenName}`);
+  }
+});
+
+// Create screen instances
+const inputScreen = new InputScreen();
+const loadingScreen = new LoadingScreen();
+const resultsScreen = new ResultsScreen();
+
+// Register screens
+registerScreen('input', inputScreen);
+registerScreen('loading', loadingScreen);
+registerScreen('results', resultsScreen);
+
+// Enable auto-save (every 30 seconds)
+enableAutoSave(30000);
+
+// Start app
+navigateTo('input');
+
+console.log('✅ HeatCalc App Ready');
+console.log('💾 Auto-save enabled (every 30s)');
+console.log('🔧 Debug tools: window.__debugRouter(), window.__debugState()');
+
+// Expose navigation for debugging
+window.__nav = {
+  toInput: () => navigateTo('input'),
+  toLoading: () => navigateTo('loading', { message: 'Testing...', nextScreen: 'input' }),
+  toResults: () => navigateTo('results')
+};
+
+console.log('🎮 Quick nav: window.__nav.toInput(), window.__nav.toResults()');
+</script>
+
+</body>
+</html>
