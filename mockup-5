@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Heat Loss Calculator</title>
+
+<style>
+  :root {
+    --glass-bg: rgba(15, 23, 42, 0.62);
+    --glass-border: rgba(255,255,255,0.38);
+
+    --text-main: #e5e7eb;
+    --text-muted: #94a3b8;
+
+    --accent-cold: #38bdf8;
+  }
+
+  * {
+    box-sizing: border-box;
+    font-family: Inter, system-ui, -apple-system, sans-serif;
+  }
+
+  body {
+    margin: 0;
+    min-height: 100vh;
+    background:
+      radial-gradient(900px at 15% 10%, rgba(56,189,248,0.28), transparent 40%),
+      radial-gradient(800px at 85% 80%, rgba(251,113,133,0.25), transparent 45%),
+      linear-gradient(160deg, #020617, #020617);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+    color: var(--text-main);
+  }
+
+  .app {
+    width: 100%;
+    max-width: 420px;
+    display: grid;
+    gap: 18px;
+  }
+
+  /* =====================
+     VISION PRO GLASS
+     ===================== */
+  .glass {
+    position: relative;
+    padding: 20px;
+    border-radius: 22px;
+    overflow: hidden;
+
+    background:
+      linear-gradient(
+        180deg,
+        rgba(255,255,255,0.18),
+        rgba(255,255,255,0.03)
+      ),
+      var(--glass-bg);
+
+    backdrop-filter: blur(26px) saturate(185%);
+    -webkit-backdrop-filter: blur(26px) saturate(185%);
+    border: 1px solid var(--glass-border);
+
+    box-shadow:
+      0 40px 80px rgba(0,0,0,0.55),
+      0 12px 24px rgba(0,0,0,0.45),
+      inset 0 1px 0 rgba(255,255,255,0.28),
+      inset 0 -1px 0 rgba(255,255,255,0.06);
+  }
+
+  /* Glass grain */
+  .glass::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    pointer-events: none;
+    background-image: url("data:image/svg+xml;utf8,\
+<svg xmlns='http://www.w3.org/2000/svg' width='120' height='120'>\
+<filter id='noise'>\
+<feTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/>\
+</filter>\
+<rect width='100%' height='100%' filter='url(%23noise)' opacity='0.09'/>\
+</svg>");
+    mix-blend-mode: overlay;
+    z-index: 2;
+  }
+
+  /* Specular highlight sweep */
+  .glass::before {
+    content: "";
+    position: absolute;
+    inset: -60%;
+    background: linear-gradient(
+      115deg,
+      transparent 40%,
+      rgba(255,255,255,0.18) 48%,
+      rgba(255,255,255,0.35) 50%,
+      rgba(255,255,255,0.18) 52%,
+      transparent 60%
+    );
+    transform: translateX(-100%) translateY(-100%);
+    animation: sweep 8s ease-in-out infinite;
+    pointer-events: none;
+    z-index: 1;
+  }
+
+  @keyframes sweep {
+    0%   { transform: translateX(-120%) translateY(-120%); }
+    45%  { transform: translateX(120%) translateY(120%); }
+    100% { transform: translateX(120%) translateY(120%); }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .glass::before {
+      animation: none;
+      opacity: 0.15;
+    }
+  }
+
+  header h1 {
+    margin: 0;
+    font-size: 1.35rem;
+    letter-spacing: -0.02em;
+  }
+
+  header p {
+    margin: 6px 0 0;
+    font-size: 0.9rem;
+    color: var(--text-muted);
+  }
+
+  label {
+    font-size: 0.75rem;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    display: block;
+    margin-bottom: 8px;
+  }
+
+  input {
+    width: 100%;
+    padding: 14px 16px;
+    border-radius: 14px;
+    background: rgba(2,6,23,0.82);
+    border: 1px solid rgba(255,255,255,0.28);
+    color: var(--text-main);
+    font-size: 1rem;
+  }
+
+  button {
+    margin-top: 14px;
+    width: 100%;
+    padding: 14px;
+    border-radius: 16px;
+    border: none;
+    cursor: pointer;
+    font-size: 1rem;
+    font-weight: 700;
+    color: #020617;
+    background: linear-gradient(135deg, var(--accent-cold), #7dd3fc);
+    box-shadow:
+      0 14px 36px rgba(56,189,248,0.45),
+      inset 0 1px 0 rgba(255,255,255,0.6);
+  }
+
+  .estimate {
+    text-align: center;
+  }
+
+  .estimate h2 {
+    margin: 0;
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--text-muted);
+  }
+
+  .estimate .value {
+    margin: 10px 0 6px;
+    font-size: 2.6rem;
+    font-weight: 800;
+    letter-spacing: -0.03em;
+    background: linear-gradient(180deg, #e0f2fe, #38bdf8);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+
+  footer {
+    text-align: center;
+    font-size: 0.7rem;
+    color: var(--text-muted);
+    opacity: 0.8;
+  }
+</style>
+</head>
+
+<body>
+  <div class="app">
+    <header class="glass">
+      <h1>Heat Loss Calculator</h1>
+      <p>Instant EN 12831 estimate</p>
+    </header>
+
+    <section class="glass">
+      <label>Postcode</label>
+      <input placeholder="SW1A 1AA" />
+      <button onclick="show()">Calculate heat loss</button>
+    </section>
+
+    <section class="glass estimate" id="result" style="display:none">
+      <h2>Peak heat loss</h2>
+      <div class="value">8.4 kW</div>
+    </section>
+
+    <footer>
+      Vision Pro glass · Grain · Specular highlight
+    </footer>
+  </div>
+
+<script>
+  function show() {
+    document.getElementById("result").style.display = "block";
+  }
+</script>
+</body>
+</html>
