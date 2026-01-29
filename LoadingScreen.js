@@ -84,6 +84,14 @@ export class LoadingScreen {
         throw new Error('No building data available');
       }
       
+      // Ensure building is a Building instance (not plain object)
+      let building = state.building;
+      if (typeof building.getAllSpaces !== 'function') {
+        // Reconstruct from JSON if needed
+        const { Building } = await import('./Building.js');
+        building = Building.fromJSON(state.building);
+      }
+      
       // Create climate config for calculator
       const climateConfig = {
         externalDesignTemp: state.climateData.externalDesignTemp,
@@ -94,18 +102,18 @@ export class LoadingScreen {
       
       // Calculate heat loss
       const calculator = new HeatLossCalculator(climateConfig);
-      const breakdown = calculator.calculate(state.building);
+      const breakdown = calculator.calculate(building);
       
-      // Update state
-      setHeatLoss(state.building.totalHeatLoss, breakdown);
+      // Update state with the Building instance
+      setHeatLoss(building.totalHeatLoss, breakdown);
       
       await this.delay(400);
       
       // Step 4: Calculate costs
       await this.showStep(3);
       
-      const heatPumpCost = calculateSystemCost(state.building, 'heatPump', true);
-      const boilerCost = calculateSystemCost(state.building, 'boiler', false);
+      const heatPumpCost = calculateSystemCost(building, 'heatPump', true);
+      const boilerCost = calculateSystemCost(building, 'boiler', false);
       
       setPricing(heatPumpCost, boilerCost);
       
