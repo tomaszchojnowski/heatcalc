@@ -13,6 +13,10 @@ https://tomaszchojnowski.github.io/heatcalc/test_page_calculator.html
 State Test page:
 https://tomaszchojnowski.github.io/heatcalc/test_state_management.html
 
+Construction Template/ UK Housing Stock: 
+https://tomaszchojnowski.github.io/heatcalc/construction_reference.html
+
+
 File Structure Plan:
 
 ```
