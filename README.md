@@ -1,6 +1,9 @@
 # 🏠 HeatCalc
 Instant heating system estimates
 
+Final working prototype Alpha 0.1.0
+https://tomaszchojnowski.github.io/heatcalc/app_demo.html
+
 Mock page:
 https://tomaszchojnowski.github.io/heatcalc/heatcalc_app_mockup.html
 
