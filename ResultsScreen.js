@@ -27,14 +27,29 @@ export class ResultsScreen {
       return;
     }
     
+    // Ensure building is a Building instance
+    await this.ensureBuildingInstance(state);
+    
     this.render(state);
     
     // Subscribe to state changes (e.g., if user modifies building)
     this.unsubscribe = subscribe((newState) => {
       if (newState.heatLoss.calculated) {
-        this.render(newState);
+        this.ensureBuildingInstance(newState).then(() => {
+          this.render(newState);
+        });
       }
     }, ['heatLoss', 'pricing']);
+  }
+  
+  /**
+   * Ensure building is a Building class instance, not plain object
+   */
+  async ensureBuildingInstance(state) {
+    if (state.building && typeof state.building.getTotalFloorArea !== 'function') {
+      const { Building } = await import('./Building.js');
+      state.building = Building.fromJSON(state.building);
+    }
   }
   
   /**
