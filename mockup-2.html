@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Heat Loss Calculator</title>
+
+<style>
+  :root {
+    --bg-1: #020617;
+    --bg-2: #020617;
+
+    --glass-dark: rgba(15, 23, 42, 0.55);
+    --glass-light: rgba(255, 255, 255, 0.08);
+    --glass-border: rgba(255, 255, 255, 0.35);
+
+    --text-main: #e5e7eb;
+    --text-muted: #94a3b8;
+
+    --accent-cold: #38bdf8;
+    --accent-warm: #fb7185;
+  }
+
+  * {
+    box-sizing: border-box;
+    font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+  }
+
+  body {
+    margin: 0;
+    min-height: 100vh;
+    background:
+      radial-gradient(900px at 10% 10%, rgba(56,189,248,0.25), transparent 40%),
+      radial-gradient(800px at 90% 80%, rgba(251,113,133,0.25), transparent 45%),
+      linear-gradient(160deg, var(--bg-1), var(--bg-2));
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    color: var(--text-main);
+  }
+
+  .app {
+    width: 100%;
+    max-width: 420px;
+    display: grid;
+    gap: 18px;
+  }
+
+  /* REAL GLASS */
+  .glass {
+    position: relative;
+    background:
+      linear-gradient(
+        180deg,
+        rgba(255,255,255,0.14),
+        rgba(255,255,255,0.02)
+      ),
+      var(--glass-dark);
+    backdrop-filter: blur(22px) saturate(180%);
+    -webkit-backdrop-filter: blur(22px) saturate(180%);
+    border-radius: 22px;
+    padding: 20px;
+    border: 1px solid var(--glass-border);
+    box-shadow:
+      0 30px 60px rgba(0,0,0,0.55),
+      inset 0 1px 0 rgba(255,255,255,0.25);
+  }
+
+  header h1 {
+    margin: 0;
+    font-size: 1.35rem;
+    letter-spacing: -0.02em;
+  }
+
+  header p {
+    margin: 6px 0 0;
+    font-size: 0.9rem;
+    color: var(--text-muted);
+  }
+
+  label {
+    font-size: 0.75rem;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    margin-bottom: 8px;
+    display: block;
+  }
+
+  input {
+    width: 100%;
+    padding: 14px 16px;
+    border-radius: 14px;
+    background: rgba(2,6,23,0.75);
+    border: 1px solid rgba(255,255,255,0.25);
+    color: var(--text-main);
+    font-size: 1rem;
+    outline: none;
+  }
+
+  input::placeholder {
+    color: #64748b;
+  }
+
+  input:focus {
+    border-color: var(--accent-cold);
+    box-shadow: 0 0 0 2px rgba(56,189,248,0.25);
+  }
+
+  button {
+    width: 100%;
+    margin-top: 14px;
+    padding: 14px;
+    border-radius: 16px;
+    border: none;
+    cursor: pointer;
+    font-size: 1rem;
+    font-weight: 700;
+    letter-spacing: -0.01em;
+    color: #020617;
+    background: linear-gradient(
+      135deg,
+      var(--accent-cold),
+      #7dd3fc
+    );
+    box-shadow:
+      0 10px 30px rgba(56,189,248,0.45),
+      inset 0 1px 0 rgba(255,255,255,0.5);
+    transition: transform 0.15s ease, box-shadow 0.15s ease;
+  }
+
+  button:hover {
+    transform: translateY(-1px);
+    box-shadow:
+      0 14px 40px rgba(56,189,248,0.55),
+      inset 0 1px 0 rgba(255,255,255,0.6);
+  }
+
+  .summary {
+    display: grid;
+    gap: 12px;
+  }
+
+  .row {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.95rem;
+  }
+
+  .row span:last-child {
+    font-weight: 600;
+  }
+
+  .estimate {
+    text-align: center;
+  }
+
+  .estimate h2 {
+    margin: 0;
+    font-size: 1rem;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+  }
+
+  .estimate .value {
+    margin: 10px 0 6px;
+    font-size: 2.6rem;
+    font-weight: 800;
+    letter-spacing: -0.03em;
+    background: linear-gradient(
+      180deg,
+      #e0f2fe,
+      #38bdf8
+    );
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+
+  footer {
+    text-align: center;
+    font-size: 0.7rem;
+    color: var(--text-muted);
+    opacity: 0.8;
+  }
+</style>
+</head>
+
+<body>
+  <div class="app">
+    <header class="glass">
+      <h1>Heat Loss Calculator</h1>
+      <p>Instant EN 12831 estimate</p>
+    </header>
+
+    <section class="glass">
+      <label>Postcode</label>
+      <input placeholder="SW1A 1AA" />
+      <button onclick="showResult()">Calculate heat loss</button>
+    </section>
+
+    <section class="glass summary" id="summary" style="display:none">
+      <div class="row"><span>Property</span><span>Semi-detached</span></div>
+      <div class="row"><span>Floor area</span><span>118 m²</span></div>
+      <div class="row"><span>Build year</span><span>1985</span></div>
+      <div class="row"><span>Design ΔT</span><span>23 °C</span></div>
+    </section>
+
+    <section class="glass estimate" id="estimate" style="display:none">
+      <h2>Peak heat loss</h2>
+      <div class="value">8.4 kW</div>
+    </section>
+
+    <footer>
+      Glassmorphism · High contrast · Mobile-first
+    </footer>
+  </div>
+
+<script>
+  function showResult() {
+    document.getElementById("summary").style.display = "grid";
+    document.getElementById("estimate").style.display = "block";
+  }
+</script>
+</body>
+</html>
