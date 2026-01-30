@@ -88,13 +88,35 @@ export class Building {
       space.ceilingConstruction = JSON.parse(JSON.stringify(template.construction.floor.upper));
     }
     
-    // Wall construction (default to external for now - simplified)
+    // Find corresponding room data from layout
+    const roomData = template.layout[floorKey].find(r => r.id === space.id);
+    
+    // Initialize all walls as internal by default
     space.wallConstruction = {
-      north: JSON.parse(JSON.stringify(template.construction.walls.external)),
-      south: JSON.parse(JSON.stringify(template.construction.walls.external)),
-      east: JSON.parse(JSON.stringify(template.construction.walls.external)),
-      west: JSON.parse(JSON.stringify(template.construction.walls.external))
+      north: JSON.parse(JSON.stringify(template.construction.walls.internal)),
+      south: JSON.parse(JSON.stringify(template.construction.walls.internal)),
+      east: JSON.parse(JSON.stringify(template.construction.walls.internal)),
+      west: JSON.parse(JSON.stringify(template.construction.walls.internal))
     };
+    
+    // Assign wall types based on room data
+    if (roomData) {
+      // External walls
+      if (roomData.externalWalls) {
+        roomData.externalWalls.forEach(direction => {
+          space.wallConstruction[direction] = JSON.parse(JSON.stringify(template.construction.walls.external));
+        });
+      }
+      
+      // Party walls (shared with neighbors - no heat loss)
+      if (roomData.partyWalls && template.construction.walls.party) {
+        roomData.partyWalls.forEach(direction => {
+          space.wallConstruction[direction] = JSON.parse(JSON.stringify(template.construction.walls.party));
+        });
+      }
+      
+      // Internal walls remain as already set
+    }
     
     // Window characteristics
     space.windowCharacteristics = JSON.parse(JSON.stringify(template.construction.windows));
