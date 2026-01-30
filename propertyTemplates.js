@@ -15,25 +15,120 @@ export const PROPERTY_TEMPLATES = {
     
     // External dimensions (meters)
     dimensions: {
-      width: 4.5,        // Narrow frontage typical
-      depth: 9.0,        // Long plan
+      width: 4.5,        // Narrow frontage (north-south)
+      depth: 9.0,        // Long plan (east-west)
       groundHeight: 2.7, // High ceilings
       firstHeight: 2.7,
-      floors: 2
+      floors: 2,
+      // Building height breakdown
+      groundFloorLevel: 0.3,     // Suspended floor buildup
+      firstFloorLevel: 3.3,      // 0.3 + 2.7 + 0.3 (floor + space + joists)
+      roofLevel: 6.3,            // First floor level + first height + joists
+      roofPitch: 45,             // degrees
+      roofRidgeHeight: 8.55      // Peak of roof (6.3 + 4.5/2 * tan(45°))
     },
     
-    // Floor plan layout
+    // 3D orientation
+    orientation: {
+      front: 'north',     // Front facade faces north
+      rear: 'south',      // Rear faces south
+      left: 'west',       // Left party wall
+      right: 'east'       // Right party wall
+    },
+    
+    // Floor plan layout with precise positioning
     layout: {
       ground: [
-        { id: 'living', name: 'Living Room', width: 4.2, depth: 4.5 },
-        { id: 'kitchen', name: 'Kitchen', width: 4.2, depth: 4.2 },
-        { id: 'hall_ground', name: 'Hallway', width: 1.2, depth: 9.0 }
+        { 
+          id: 'living', 
+          name: 'Living Room', 
+          width: 2.94,    // Adjusted to fit: 4.5 - 0.23*2 - 1.0 - 0.1
+          depth: 4.5,
+          position: { x: 0.23, z: 0 },  // After left party wall
+          externalWalls: ['north'],      // Front wall only
+          partyWalls: ['west'],          // Left party wall
+          internalWalls: ['east'],       // Wall to hallway
+          windows: [
+            { wall: 'north', width: 1.5, height: 2.0, position: 0.7 }
+          ]
+        },
+        { 
+          id: 'hallway', 
+          name: 'Hallway', 
+          width: 1.0,
+          depth: 9.0,    // Full depth
+          position: { x: 3.27, z: 0 },  // 0.23 + 2.94 + 0.1
+          externalWalls: ['north', 'south'],  // Front and rear
+          partyWalls: ['east'],               // Right party wall
+          internalWalls: ['west']             // Wall to living/kitchen
+        },
+        { 
+          id: 'kitchen', 
+          name: 'Kitchen', 
+          width: 2.94,
+          depth: 4.5,
+          position: { x: 0.23, z: 4.5 },  // Rear left
+          externalWalls: ['south'],
+          partyWalls: ['west'],
+          internalWalls: ['east'],
+          windows: [
+            { wall: 'south', width: 1.2, height: 1.5, position: 0.8 }
+          ]
+        }
       ],
       first: [
-        { id: 'bedroom1', name: 'Bedroom 1', width: 4.2, depth: 4.5 },
-        { id: 'bedroom2', name: 'Bedroom 2', width: 4.2, depth: 3.0 },
-        { id: 'bedroom3', name: 'Bedroom 3', width: 4.2, depth: 3.0 },
-        { id: 'bathroom', name: 'Bathroom', width: 2.1, depth: 2.4 }
+        { 
+          id: 'bedroom1', 
+          name: 'Bedroom 1', 
+          width: 2.94,
+          depth: 4.5,
+          position: { x: 0.23, z: 0 },
+          externalWalls: ['north'],
+          partyWalls: ['west'],
+          internalWalls: ['east'],
+          windows: [
+            { wall: 'north', width: 1.5, height: 1.8, position: 0.7 }
+          ]
+        },
+        { 
+          id: 'bedroom3', 
+          name: 'Bedroom 3', 
+          width: 1.0,
+          depth: 3.0,
+          position: { x: 3.27, z: 0 },
+          externalWalls: ['north'],
+          partyWalls: ['east'],
+          internalWalls: ['west', 'south'],
+          windows: [
+            { wall: 'north', width: 1.0, height: 1.5, position: 0.0 }
+          ]
+        },
+        { 
+          id: 'bedroom2', 
+          name: 'Bedroom 2', 
+          width: 2.94,
+          depth: 3.0,
+          position: { x: 0.23, z: 6.0 },
+          externalWalls: ['south'],
+          partyWalls: ['west'],
+          internalWalls: ['east'],
+          windows: [
+            { wall: 'south', width: 1.2, height: 1.5, position: 0.9 }
+          ]
+        },
+        { 
+          id: 'bathroom', 
+          name: 'Bathroom', 
+          width: 1.0,
+          depth: 6.0,
+          position: { x: 3.27, z: 3.0 },
+          externalWalls: ['south'],
+          partyWalls: ['east'],
+          internalWalls: ['west'],
+          windows: [
+            { wall: 'south', width: 0.6, height: 0.8, position: 0.2 }
+          ]
+        }
       ]
     },
     
