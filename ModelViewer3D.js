@@ -350,43 +350,92 @@ export class ModelViewer3D {
   buildRoof(template) {
     const dims = template.dimensions;
     const roofLevel = dims.roofLevel || 6.3;
-    const roofHeight = (dims.width / 2) * Math.tan((dims.roofPitch * Math.PI) / 180);
+    
+    // Determine roof orientation based on building proportions
+    // Ridge should run along the LONGER dimension
+    const ridgeAlongDepth = dims.depth > dims.width;
+    
+    // Calculate roof height based on the SHORTER dimension (the span across the ridge)
+    const roofSpan = ridgeAlongDepth ? dims.width : dims.depth;
+    const roofHeight = (roofSpan / 2) * Math.tan((dims.roofPitch * Math.PI) / 180);
     
     // Create pitched roof geometry
     const shape = new THREE.Shape();
-    shape.moveTo(-dims.width / 2, 0);
-    shape.lineTo(dims.width / 2, 0);
-    shape.lineTo(0, roofHeight);
-    shape.lineTo(-dims.width / 2, 0);
     
-    const extrudeSettings = {
-      steps: 1,
-      depth: dims.depth,
-      bevelEnabled: false
-    };
-    
-    const geometry = new THREE.ExtrudeGeometry(shape, extrudeSettings);
-    const color = this.getColorFromUValue(template.construction.roof.uValue);
-    
-    const material = new THREE.MeshStandardMaterial({
-      color: color,
-      roughness: 0.8,
-      metalness: 0.1
-    });
-    
-    const roofMesh = new THREE.Mesh(geometry, material);
-    roofMesh.position.set(dims.width / 2, roofLevel, 0);
-    roofMesh.rotation.x = Math.PI / 2;
-    roofMesh.castShadow = true;
-    roofMesh.receiveShadow = true;
-    roofMesh.userData = { 
-      type: 'roof',
-      construction: template.construction.roof,
-      originalColor: color
-    };
-    
-    this.scene.add(roofMesh);
-    this.meshes.push(roofMesh);
+    if (ridgeAlongDepth) {
+      // Ridge runs along Z-axis (depth) - typical for Victorian terraces
+      // Triangle spans across X-axis (width)
+      shape.moveTo(-dims.width / 2, 0);
+      shape.lineTo(dims.width / 2, 0);
+      shape.lineTo(0, roofHeight);
+      shape.lineTo(-dims.width / 2, 0);
+      
+      const extrudeSettings = {
+        steps: 1,
+        depth: dims.depth,
+        bevelEnabled: false
+      };
+      
+      const geometry = new THREE.ExtrudeGeometry(shape, extrudeSettings);
+      const color = this.getColorFromUValue(template.construction.roof.uValue);
+      
+      const material = new THREE.MeshStandardMaterial({
+        color: color,
+        roughness: 0.8,
+        metalness: 0.1
+      });
+      
+      const roofMesh = new THREE.Mesh(geometry, material);
+      roofMesh.position.set(dims.width / 2, roofLevel, 0);
+      roofMesh.rotation.x = Math.PI / 2;
+      roofMesh.castShadow = true;
+      roofMesh.receiveShadow = true;
+      roofMesh.userData = { 
+        type: 'roof',
+        construction: template.construction.roof,
+        originalColor: color
+      };
+      
+      this.scene.add(roofMesh);
+      this.meshes.push(roofMesh);
+    } else {
+      // Ridge runs along X-axis (width)
+      // Triangle spans across Z-axis (depth)
+      shape.moveTo(-dims.depth / 2, 0);
+      shape.lineTo(dims.depth / 2, 0);
+      shape.lineTo(0, roofHeight);
+      shape.lineTo(-dims.depth / 2, 0);
+      
+      const extrudeSettings = {
+        steps: 1,
+        depth: dims.width,
+        bevelEnabled: false
+      };
+      
+      const geometry = new THREE.ExtrudeGeometry(shape, extrudeSettings);
+      const color = this.getColorFromUValue(template.construction.roof.uValue);
+      
+      const material = new THREE.MeshStandardMaterial({
+        color: color,
+        roughness: 0.8,
+        metalness: 0.1
+      });
+      
+      const roofMesh = new THREE.Mesh(geometry, material);
+      roofMesh.position.set(0, roofLevel, dims.depth / 2);
+      roofMesh.rotation.y = Math.PI / 2;
+      roofMesh.rotation.x = Math.PI / 2;
+      roofMesh.castShadow = true;
+      roofMesh.receiveShadow = true;
+      roofMesh.userData = { 
+        type: 'roof',
+        construction: template.construction.roof,
+        originalColor: color
+      };
+      
+      this.scene.add(roofMesh);
+      this.meshes.push(roofMesh);
+    }
   }
   
   /**
