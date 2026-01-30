@@ -25,7 +25,7 @@ export const PROPERTY_TEMPLATES = {
       firstFloorLevel: 3.3,      // 0.3 + 2.7 + 0.3 (floor + space + joists)
       roofLevel: 6.3,            // First floor level + first height + joists
       roofPitch: 45,             // degrees
-      roofRidgeHeight: 8.55      // Peak of roof (6.3 + 4.5/2 * tan(45°))
+      roofRidgeHeight: 10.8      // 6.3 + 9.0/2 * tan(45°) - ridge runs along depth
     },
     
     // 3D orientation
