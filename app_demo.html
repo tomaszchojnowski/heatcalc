@@ -19,12 +19,11 @@ import { LoadingScreen } from './LoadingScreen.js';
 import { ResultsScreen } from './ResultsScreen.js';
 import { enableAutoSave } from './state.js';
 import { Building } from './Building.js';
-import { EditScreen } from './EditScreen.js';
+import { PROPERTY_TEMPLATES } from './propertyTemplates.js';
 
-
-  
-// Make Building available globally for state management
+// Make Building and templates available globally for state management and 3D viewer
 window.Building = Building;
+window.PROPERTY_TEMPLATES = PROPERTY_TEMPLATES;
 
 console.log('🏠 HeatCalc App Starting...');
 
@@ -41,16 +40,12 @@ initRouter({
 const inputScreen = new InputScreen();
 const loadingScreen = new LoadingScreen();
 const resultsScreen = new ResultsScreen();
-const editScreen = new EditScreen();
 
-  
 // Register screens
 registerScreen('input', inputScreen);
 registerScreen('loading', loadingScreen);
 registerScreen('results', resultsScreen);
-registerScreen('edit', editScreen);
 
-  
 // Enable auto-save (every 30 seconds)
 enableAutoSave(30000);
 
