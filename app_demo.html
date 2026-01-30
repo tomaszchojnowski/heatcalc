@@ -3,11 +3,10 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <!-- Three.js Library -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
-  
 <title>HeatCalc - Home Heating Assessment</title>
 <link rel="stylesheet" href="./styles.css">
+<!-- Three.js Library -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
 </head>
 <body>
 
@@ -20,6 +19,7 @@ import { initRouter, registerScreen, navigateTo } from './router.js';
 import { InputScreen } from './InputScreen.js';
 import { LoadingScreen } from './LoadingScreen.js';
 import { ResultsScreen } from './ResultsScreen.js';
+import { EditScreen } from './EditScreen.js';
 import { enableAutoSave } from './state.js';
 import { Building } from './Building.js';
 import { PROPERTY_TEMPLATES } from './propertyTemplates.js';
@@ -43,11 +43,13 @@ initRouter({
 const inputScreen = new InputScreen();
 const loadingScreen = new LoadingScreen();
 const resultsScreen = new ResultsScreen();
+const editScreen = new EditScreen();
 
 // Register screens
 registerScreen('input', inputScreen);
 registerScreen('loading', loadingScreen);
 registerScreen('results', resultsScreen);
+registerScreen('edit', editScreen);
 
 // Enable auto-save (every 30 seconds)
 enableAutoSave(30000);
@@ -63,10 +65,11 @@ console.log('🔧 Debug tools: window.__debugRouter(), window.__debugState()');
 window.__nav = {
   toInput: () => navigateTo('input'),
   toLoading: () => navigateTo('loading', { message: 'Testing...', nextScreen: 'input' }),
-  toResults: () => navigateTo('results')
+  toResults: () => navigateTo('results'),
+  toEdit: () => navigateTo('edit')
 };
 
-console.log('🎮 Quick nav: window.__nav.toInput(), window.__nav.toResults()');
+console.log('🎮 Quick nav: window.__nav.toInput(), window.__nav.toResults(), window.__nav.toEdit()');
 </script>
 
 </body>
