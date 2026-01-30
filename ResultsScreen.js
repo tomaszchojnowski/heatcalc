@@ -6,12 +6,16 @@
 import { getState, subscribe } from './state.js';
 import { calculateRunningCosts } from './pricingData.js';
 import { navigateTo } from './router.js';
+import { Building } from './Building.js';
+import { ModelViewer3D } from './ModelViewer3D.js';
+import { PROPERTY_TEMPLATES } from './propertyTemplates.js';
 
 export class ResultsScreen {
   constructor() {
     this.name = 'results';
     this.container = null;
     this.unsubscribe = null;
+    this.modelViewer = null;
   }
   
   /**
@@ -59,6 +63,12 @@ export class ResultsScreen {
     if (this.unsubscribe) {
       this.unsubscribe();
     }
+    
+    // Dispose 3D viewer
+    if (this.modelViewer) {
+      this.modelViewer.dispose();
+      this.modelViewer = null;
+    }
   }
   
   /**
@@ -80,8 +90,22 @@ export class ResultsScreen {
         </div>
         
         <div class="container">
-          <!-- Property Summary -->
-          ${this.renderPropertySummary(state)}
+          <!-- 3D Model Viewer & Property Summary Grid -->
+          <div class="results-grid">
+            <!-- 3D Model Viewer -->
+            <div class="model-viewer-section">
+              <div class="glass-card">
+                <h2>3D Building Model</h2>
+                <div id="modelViewer" class="model-viewer-container"></div>
+                <div id="selectionInfo" class="selection-info" style="display: none;"></div>
+              </div>
+            </div>
+            
+            <!-- Property Summary -->
+            <div class="property-summary-section">
+              ${this.renderPropertySummary(state)}
+            </div>
+          </div>
           
           <!-- Heat Loss Breakdown -->
           ${this.renderHeatLossBreakdown(state)}
@@ -97,6 +121,9 @@ export class ResultsScreen {
     
     this.container.innerHTML = html;
     this.attachEventListeners();
+    
+    // Initialize 3D viewer after DOM is ready
+    setTimeout(() => this.init3DViewer(state), 100);
   }
   
   /**
@@ -104,34 +131,118 @@ export class ResultsScreen {
    */
   renderPropertySummary(state) {
     return `
-      <div class="section">
-        <div class="glass-card">
-          <h2>Your Property</h2>
-          <div class="property-details">
-            <div class="detail-row">
-              <span class="detail-label">Location</span>
-              <span class="detail-value">${state.postcode} - ${state.climateData.name}</span>
-            </div>
-            <div class="detail-row">
-              <span class="detail-label">Property Type</span>
-              <span class="detail-value">${state.building.propertyName}</span>
-            </div>
-            <div class="detail-row">
-              <span class="detail-label">Era</span>
-              <span class="detail-value">${state.building.era}</span>
-            </div>
-            <div class="detail-row">
-              <span class="detail-label">Floor Area</span>
-              <span class="detail-value">${state.building.getTotalFloorArea().toFixed(1)} m²</span>
-            </div>
-            <div class="detail-row">
-              <span class="detail-label">External Temperature</span>
-              <span class="detail-value">${state.climateData.externalDesignTemp}°C</span>
-            </div>
+      <div class="glass-card">
+        <h2>Your Property</h2>
+        <div class="property-details">
+          <div class="detail-row">
+            <span class="detail-label">Location</span>
+            <span class="detail-value">${state.postcode} - ${state.climateData.name}</span>
+          </div>
+          <div class="detail-row">
+            <span class="detail-label">Property Type</span>
+            <span class="detail-value">${state.building.propertyName}</span>
+          </div>
+          <div class="detail-row">
+            <span class="detail-label">Era</span>
+            <span class="detail-value">${state.building.era}</span>
+          </div>
+          <div class="detail-row">
+            <span class="detail-label">Floor Area</span>
+            <span class="detail-value">${state.building.getTotalFloorArea().toFixed(1)} m²</span>
+          </div>
+          <div class="detail-row">
+            <span class="detail-label">External Temperature</span>
+            <span class="detail-value">${state.climateData.externalDesignTemp}°C</span>
           </div>
         </div>
       </div>
     `;
+  }
+  
+  /**
+   * Initialize 3D viewer
+   */
+  init3DViewer(state) {
+    const container = document.getElementById('modelViewer');
+    if (!container) {
+      console.error('Model viewer container not found');
+      return;
+    }
+    
+    // Make PROPERTY_TEMPLATES available globally for ModelViewer3D
+    window.PROPERTY_TEMPLATES = PROPERTY_TEMPLATES;
+    
+    // Dispose existing viewer if any
+    if (this.modelViewer) {
+      this.modelViewer.dispose();
+    }
+    
+    // Create new viewer
+    this.modelViewer = new ModelViewer3D(container, state.building, {
+      autoRotate: true,
+      rotateSpeed: 0.003,
+      enableSelection: true,
+      onSelect: (data) => this.handleElementSelection(data)
+    });
+  }
+  
+  /**
+   * Handle 3D element selection
+   */
+  handleElementSelection(data) {
+    const infoDiv = document.getElementById('selectionInfo');
+    if (!infoDiv) return;
+    
+    if (!data) {
+      infoDiv.style.display = 'none';
+      return;
+    }
+    
+    let html = '<div class="selected-element">';
+    
+    if (data.type === 'wall') {
+      html += `<h4>${data.space.name} - ${this.capitalizeFirst(data.direction)} Wall</h4>`;
+      html += `<p><strong>Type:</strong> ${data.construction.description}</p>`;
+      html += `<p><strong>U-Value:</strong> ${data.construction.uValue.toFixed(2)} W/m²K</p>`;
+      html += `<p><strong>Thickness:</strong> ${data.construction.thickness}m</p>`;
+      
+      // Show heat loss if available
+      if (data.space.heatLoss && data.space.heatLoss.walls[data.direction]) {
+        html += `<p><strong>Heat Loss:</strong> ${(data.space.heatLoss.walls[data.direction] / 1000).toFixed(2)} kW</p>`;
+      }
+    } else if (data.type === 'floor') {
+      html += `<h4>${data.space.name} - Floor</h4>`;
+      html += `<p><strong>Type:</strong> ${data.construction.description}</p>`;
+      html += `<p><strong>U-Value:</strong> ${data.construction.uValue.toFixed(2)} W/m²K</p>`;
+      
+      if (data.space.heatLoss && data.space.heatLoss.floor) {
+        html += `<p><strong>Heat Loss:</strong> ${(data.space.heatLoss.floor / 1000).toFixed(2)} kW</p>`;
+      }
+    } else if (data.type === 'ceiling') {
+      html += `<h4>${data.space.name} - Ceiling</h4>`;
+      html += `<p><strong>Type:</strong> ${data.construction.description}</p>`;
+      html += `<p><strong>U-Value:</strong> ${data.construction.uValue.toFixed(2)} W/m²K</p>`;
+      
+      if (data.space.heatLoss && data.space.heatLoss.ceiling) {
+        html += `<p><strong>Heat Loss:</strong> ${(data.space.heatLoss.ceiling / 1000).toFixed(2)} kW</p>`;
+      }
+    } else if (data.type === 'roof') {
+      html += `<h4>Roof</h4>`;
+      html += `<p><strong>Type:</strong> ${data.construction.description}</p>`;
+      html += `<p><strong>U-Value:</strong> ${data.construction.uValue.toFixed(2)} W/m²K</p>`;
+    }
+    
+    html += '</div>';
+    
+    infoDiv.innerHTML = html;
+    infoDiv.style.display = 'block';
+  }
+  
+  /**
+   * Capitalize first letter
+   */
+  capitalizeFirst(str) {
+    return str.charAt(0).toUpperCase() + str.slice(1);
   }
   
   /**
@@ -425,6 +536,59 @@ const styles = `
   .results-screen {
     min-height: 100vh;
     padding-bottom: var(--spacing-2xl);
+  }
+  
+  .results-grid {
+    display: grid;
+    gap: var(--spacing-lg);
+    margin-bottom: var(--spacing-xl);
+  }
+  
+  /* Mobile: 3D model on top, property summary below */
+  @media (max-width: 768px) {
+    .results-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+  
+  /* Tablet/Desktop: 3D model 2/3, property summary 1/3 */
+  @media (min-width: 769px) {
+    .results-grid {
+      grid-template-columns: 2fr 1fr;
+    }
+  }
+  
+  .model-viewer-container {
+    width: 100%;
+    height: 400px;
+    background: rgba(0, 0, 0, 0.2);
+    border-radius: var(--radius-md);
+    overflow: hidden;
+    position: relative;
+  }
+  
+  @media (min-width: 769px) {
+    .model-viewer-container {
+      height: 500px;
+    }
+  }
+  
+  .selection-info {
+    margin-top: var(--spacing-md);
+    padding: var(--spacing-md);
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: var(--radius-md);
+    border-left: 4px solid var(--accent);
+  }
+  
+  .selected-element h4 {
+    margin-bottom: var(--spacing-sm);
+    color: var(--accent);
+  }
+  
+  .selected-element p {
+    margin: var(--spacing-xs) 0;
+    font-size: 0.875rem;
   }
   
   .property-details {
