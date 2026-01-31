@@ -37,11 +37,26 @@ export class ModelViewer3D {
     this.scene = new THREE.Scene();
     this.scene.background = new THREE.Color(0x6675dd);
     
+    // Get building dimensions for dynamic camera positioning
+    const template = this.getTemplate();
+    const dims = template.dimensions || { width: 6, depth: 8, roofRidgeHeight: 8 };
+    
+    // Calculate camera parameters from building size
+    const maxDimension = Math.max(dims.width, dims.depth, dims.roofRidgeHeight || 8);
+    const cameraDistance = maxDimension * 2.5;
+    const buildingCenterY = (dims.roofRidgeHeight || 8) / 2;
+    const buildingCenterX = dims.width / 2;
+    const buildingCenterZ = dims.depth / 2;
+    
     // Camera
     const aspect = this.container.clientWidth / this.container.clientHeight;
     this.camera = new THREE.PerspectiveCamera(50, aspect, 0.1, 1000);
-    this.camera.position.set(12, 8, 12);
-    this.camera.lookAt(0, 3, 0);
+    this.camera.position.set(cameraDistance * 0.7, cameraDistance * 0.5, cameraDistance * 0.7);
+    this.camera.lookAt(buildingCenterX, buildingCenterY, buildingCenterZ);
+    
+    // Store camera target for orbit controls
+    this.cameraTarget = new THREE.Vector3(buildingCenterX, buildingCenterY, buildingCenterZ);
+    this.cameraRadius = cameraDistance;
     
     // Renderer
     this.renderer = new THREE.WebGLRenderer({ antialias: true });
@@ -58,8 +73,9 @@ export class ModelViewer3D {
     directionalLight.castShadow = true;
     this.scene.add(directionalLight);
     
-    // Grid helper
-    const gridHelper = new THREE.GridHelper(30, 30, 0xaaaaff, 0x8888dd);
+    // Grid helper - size based on building footprint
+    const gridSize = Math.max(dims.width, dims.depth) * 3;
+    const gridHelper = new THREE.GridHelper(gridSize, Math.ceil(gridSize), 0xaaaaff, 0x8888dd);
     gridHelper.position.y = -0.1;
     this.scene.add(gridHelper);
     
@@ -142,10 +158,9 @@ export class ModelViewer3D {
    * Build walls for a space
    */
   buildWalls(space, layoutData, pos, floorLevel, centerX, centerZ) {
-    const wallThickness = 0.23;
-    
     // North wall (front)
     if (space.wallConstruction.north) {
+      const wallThickness = space.wallConstruction.north.thickness || 0.23;
       const wallMesh = this.createWall(
         space.width,
         space.height,
@@ -173,6 +188,7 @@ export class ModelViewer3D {
     
     // South wall (rear)
     if (space.wallConstruction.south) {
+      const wallThickness = space.wallConstruction.south.thickness || 0.23;
       const wallMesh = this.createWall(
         space.width,
         space.height,
@@ -200,6 +216,7 @@ export class ModelViewer3D {
     
     // East wall (right)
     if (space.wallConstruction.east) {
+      const wallThickness = space.wallConstruction.east.thickness || 0.23;
       const wallMesh = this.createWall(
         wallThickness,
         space.height,
@@ -220,6 +237,7 @@ export class ModelViewer3D {
     
     // West wall (left)
     if (space.wallConstruction.west) {
+      const wallThickness = space.wallConstruction.west.thickness || 0.23;
       const wallMesh = this.createWall(
         wallThickness,
         space.height,
@@ -289,7 +307,8 @@ export class ModelViewer3D {
   buildFloor(space, pos, level) {
     if (!space.floorConstruction || space.floorConstruction.uValue === 0) return;
     
-    const geometry = new THREE.BoxGeometry(space.width, 0.3, space.depth);
+    const floorThickness = space.floorConstruction.thickness || 0.30;
+    const geometry = new THREE.BoxGeometry(space.width, floorThickness, space.depth);
     const color = this.getColorFromUValue(space.floorConstruction.uValue);
     
     const material = new THREE.MeshStandardMaterial({
@@ -299,7 +318,7 @@ export class ModelViewer3D {
     });
     
     const mesh = new THREE.Mesh(geometry, material);
-    mesh.position.set(pos.x + space.width / 2, level - 0.15, pos.z + space.depth / 2);
+    mesh.position.set(pos.x + space.width / 2, level - floorThickness / 2, pos.z + space.depth / 2);
     mesh.castShadow = true;
     mesh.receiveShadow = true;
     mesh.userData = { 
@@ -319,7 +338,8 @@ export class ModelViewer3D {
   buildCeiling(space, pos, level) {
     if (!space.ceilingConstruction) return;
     
-    const geometry = new THREE.BoxGeometry(space.width, 0.2, space.depth);
+    const ceilingThickness = space.ceilingConstruction.thickness || 0.20;
+    const geometry = new THREE.BoxGeometry(space.width, ceilingThickness, space.depth);
     const color = this.getColorFromUValue(space.ceilingConstruction.uValue);
     
     const material = new THREE.MeshStandardMaterial({
@@ -350,93 +370,43 @@ export class ModelViewer3D {
   buildRoof(template) {
     const dims = template.dimensions;
     const roofLevel = dims.roofLevel || 6.3;
-    
-    // Determine roof orientation based on building proportions
-    // Ridge should run along the LONGER dimension
-    const ridgeAlongDepth = dims.depth > dims.width;
-    
-    // Calculate roof height based on the SHORTER dimension (the span across the ridge)
-    const roofSpan = ridgeAlongDepth ? dims.width : dims.depth;
-    const roofHeight = (roofSpan / 2) * Math.tan((dims.roofPitch * Math.PI) / 180);
+    const roofHeight = (dims.width / 2) * Math.tan((dims.roofPitch * Math.PI) / 180);
     
     // Create pitched roof geometry
     const shape = new THREE.Shape();
+    shape.moveTo(-dims.width / 2, 0);
+    shape.lineTo(dims.width / 2, 0);
+    shape.lineTo(0, roofHeight);
+    shape.lineTo(-dims.width / 2, 0);
     
-    if (ridgeAlongDepth) {
-      // Ridge runs along Z-axis (depth) - typical for Victorian terraces
-      // Triangle spans across X-axis (width)
-      shape.moveTo(-dims.width / 2, 0);
-      shape.lineTo(dims.width / 2, 0);
-      shape.lineTo(0, roofHeight);
-      shape.lineTo(-dims.width / 2, 0);
-      
-      const extrudeSettings = {
-        steps: 1,
-        depth: dims.depth,
-        bevelEnabled: false
-      };
-      
-      const geometry = new THREE.ExtrudeGeometry(shape, extrudeSettings);
-      const color = this.getColorFromUValue(template.construction.roof.uValue);
-      
-      const material = new THREE.MeshStandardMaterial({
-        color: color,
-        roughness: 0.8,
-        metalness: 0.1
-      });
-      
-      const roofMesh = new THREE.Mesh(geometry, material);
-      roofMesh.position.set(dims.width / 2, roofLevel, 0);
-      roofMesh.rotation.z = Math.PI / 2;
-      roofMesh.rotation.x = Math.PI / 2;
-      roofMesh.castShadow = true;
-      roofMesh.receiveShadow = true;
-      roofMesh.userData = { 
-        type: 'roof',
-        construction: template.construction.roof,
-        originalColor: color
-      };
-      
-      this.scene.add(roofMesh);
-      this.meshes.push(roofMesh);
-    } else {
-      // Ridge runs along X-axis (width)
-      // Triangle spans across Z-axis (depth)
-      shape.moveTo(-dims.depth / 2, 0);
-      shape.lineTo(dims.depth / 2, 0);
-      shape.lineTo(0, roofHeight);
-      shape.lineTo(-dims.depth / 2, 0);
-      
-      const extrudeSettings = {
-        steps: 1,
-        depth: dims.width,
-        bevelEnabled: false
-      };
-      
-      const geometry = new THREE.ExtrudeGeometry(shape, extrudeSettings);
-      const color = this.getColorFromUValue(template.construction.roof.uValue);
-      
-      const material = new THREE.MeshStandardMaterial({
-        color: color,
-        roughness: 0.8,
-        metalness: 0.1
-      });
-      
-      const roofMesh = new THREE.Mesh(geometry, material);
-      roofMesh.position.set(0, roofLevel, dims.depth / 2);
-      roofMesh.rotation.y = Math.PI / 2;
-      roofMesh.rotation.x = Math.PI / 2;
-      roofMesh.castShadow = true;
-      roofMesh.receiveShadow = true;
-      roofMesh.userData = { 
-        type: 'roof',
-        construction: template.construction.roof,
-        originalColor: color
-      };
-      
-      this.scene.add(roofMesh);
-      this.meshes.push(roofMesh);
-    }
+    const extrudeSettings = {
+      steps: 1,
+      depth: dims.depth,
+      bevelEnabled: false
+    };
+    
+    const geometry = new THREE.ExtrudeGeometry(shape, extrudeSettings);
+    const color = this.getColorFromUValue(template.construction.roof.uValue);
+    
+    const material = new THREE.MeshStandardMaterial({
+      color: color,
+      roughness: 0.8,
+      metalness: 0.1
+    });
+    
+    const roofMesh = new THREE.Mesh(geometry, material);
+    roofMesh.position.set(dims.width / 2, roofLevel, 0);
+    roofMesh.rotation.x = Math.PI / 2;
+    roofMesh.castShadow = true;
+    roofMesh.receiveShadow = true;
+    roofMesh.userData = { 
+      type: 'roof',
+      construction: template.construction.roof,
+      originalColor: color
+    };
+    
+    this.scene.add(roofMesh);
+    this.meshes.push(roofMesh);
   }
   
   /**
@@ -601,11 +571,13 @@ export class ModelViewer3D {
    * Update camera position based on rotation
    */
   updateCameraPosition() {
-    const radius = 18;
-    this.camera.position.x = radius * Math.sin(this.rotation.y) * Math.cos(this.rotation.x);
-    this.camera.position.y = 8 + radius * Math.sin(this.rotation.x);
-    this.camera.position.z = radius * Math.cos(this.rotation.y) * Math.cos(this.rotation.x);
-    this.camera.lookAt(0, 4, 4.5);
+    const radius = this.cameraRadius || 18;
+    const target = this.cameraTarget || new THREE.Vector3(0, 4, 4.5);
+    
+    this.camera.position.x = target.x + radius * Math.sin(this.rotation.y) * Math.cos(this.rotation.x);
+    this.camera.position.y = target.y + radius * Math.sin(this.rotation.x);
+    this.camera.position.z = target.z + radius * Math.cos(this.rotation.y) * Math.cos(this.rotation.x);
+    this.camera.lookAt(target);
   }
   
   /**
