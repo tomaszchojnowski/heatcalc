@@ -118,3 +118,178 @@ This dataset is suitable for:
 ---
 
 *Prepared as a high-level reference summary. Percentages are indicative and rounded.*
+
+
+
+
+---
+Seconfd Review with London Stock
+---
+# UK & London Single-Residency Housing Stock  
+## National Summary with London Building Stock Model (LBSM) Alignment
+
+---
+
+## Purpose
+
+This document summarises the **most common single-residency house types in the UK**, with a **London-specific refinement aligned to the London Building Stock Model (LBSM / LBSM2)**.
+
+It is intended for:
+- Building stock modelling
+- Energy and heat-loss archetyping
+- Retrofit and policy analysis
+- Urban vs national stock comparison
+
+---
+
+## Definitions
+
+**Single-residency houses** include:
+- Terraced houses
+- Semi-detached houses
+- Detached houses
+- Bungalows
+
+**Excluded**:
+- Flats / maisonettes / apartments
+- HMOs and non-domestic buildings
+
+---
+
+# 1. National UK Housing Stock (England & Wales Baseline)
+
+### Approximate Total Dwellings
+- **~27.1 million dwellings**
+
+### National Distribution by Property Type
+
+| Property Type         | Estimated Count | Share of Total |
+|----------------------|-----------------|----------------|
+| Terraced houses      | ~7.0 million    | ~26%           |
+| Semi-detached houses | ~6.4 million    | ~24%           |
+| Detached houses      | ~4.3 million    | ~16%           |
+| Bungalows            | ~2.5 million    | ~9%            |
+| Flats / maisonettes  | ~6.4 million    | ~24%           |
+| Other                | <1%             | <1%            |
+
+---
+
+### Key National Insights
+
+- **~75% of UK dwellings are single-residency houses**
+- **Terraced + semi-detached houses ≈ 50% of all UK homes**
+- UK housing stock is dominated by:
+  - Pre-1919 terraced housing
+  - Inter-war and post-war semi-detached housing
+- Detached homes form a minority at national scale
+
+---
+
+# 2. London Housing Stock (LBSM-Aligned)
+
+### London Building Stock Model (LBSM)
+
+- Developed by **UCL Energy Institute** for the **Greater London Authority**
+- Covers **every building in Greater London**
+- Includes:
+  - Geometry
+  - Age bands
+  - EPC-derived fabric and systems data
+- LBSM focuses on **buildings**, not households
+
+### Approximate London Domestic Buildings (LBSM Context)
+
+| Category     | Estimated Count | Share |
+|-------------|-----------------|-------|
+| Houses      | ~1.5 million    | ~44%  |
+| Flats       | ~1.9 million    | ~56%  |
+
+---
+
+## 2.1 London Dwelling Type Distribution  
+*(Census 2021, consistent with LBSM structure)*
+
+| Dwelling Type                | Share of London Dwellings |
+|-----------------------------|---------------------------|
+| Flats / maisonettes         | ~54%                      |
+| Terraced houses             | ~21%                      |
+| Semi-detached houses        | ~19%                      |
+| Detached houses             | ~6%                       |
+| Other                       | <1%                       |
+
+---
+
+## 2.2 London Single-Residency Houses (LBSM-Relevant)
+
+| House Type        | Share of All London Dwellings | Approx. Count |
+|-------------------|-------------------------------|---------------|
+| Terraced houses   | ~21%                          | ~720,000      |
+| Semi-detached     | ~19%                          | ~650,000      |
+| Detached houses   | ~6%                           | ~200,000      |
+| **All houses**    | **~44%**                      | **~1.5m**     |
+
+---
+
+### Key London Insights
+
+- **Flats dominate London’s housing stock**
+- **Terraced houses are the most common house type**
+- **Detached houses are rare** due to urban density
+- London has:
+  - Higher shared-wall ratios
+  - Lower exposed envelope per dwelling
+  - Strong implications for heat-loss and retrofit modelling
+
+---
+
+# 3. National vs London Comparison
+
+| Metric                          | UK Average | London |
+|---------------------------------|------------|--------|
+| Share of houses                 | ~75%       | ~44%   |
+| Share of flats                  | ~25%       | ~56%   |
+| Dominant house type             | Terraced   | Terraced |
+| Detached house prevalence       | Moderate   | Low    |
+| Typical exposed envelope        | Higher     | Lower  |
+
+---
+
+# 4. Relevance to Energy & Heat-Loss Modelling
+
+### UK-Wide
+- Semi-detached and terraced houses dominate retrofit potential
+- High variability in exposed area and fabric condition
+
+### London (LBSM)
+- High proportion of:
+  - Party walls
+  - Compact forms
+  - Flats with minimal envelope exposure
+- LBSM enables:
+  - Archetype-based modelling
+  - Borough-level aggregation
+  - EPC-driven fabric inference
+
+---
+
+# 5. Notes on Data Usage
+
+- **LBSM / LBSM2** does not publish simple national summaries
+- Aggregated statistics are derived by:
+  - Processing raw LBSM building records
+  - Aligning with Census accommodation categories
+- Percentages are rounded and indicative
+
+---
+
+## Summary
+
+- The **UK housing stock** is dominated by **single-residency houses**
+- **London is structurally different**, with flats forming the majority
+- **Terraced houses** are the most common house type both nationally and in London
+- **LBSM provides the definitive spatial and energy framework for London**, while national datasets remain necessary for UK-wide context
+
+---
+
+*Prepared for technical, modelling, and policy use.*
+
