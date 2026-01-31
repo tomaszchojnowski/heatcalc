@@ -49,7 +49,7 @@ export const PROPERTY_TEMPLATES = {
           partyWalls: ['west'],          // Left party wall
           internalWalls: ['east'],       // Wall to hallway
           windows: [
-            { wall: 'north', width: 1.5, height: 2.0, position: 0.7 }
+            { wall: 'north', width: 1.5, height: 2.0, position: 0.7, sillHeight: 0.9 }
           ]
         },
         { 
@@ -60,7 +60,10 @@ export const PROPERTY_TEMPLATES = {
           position: { x: 3.27, z: 0 },  // 0.23 + 2.94 + 0.1
           externalWalls: ['north', 'south'],  // Front and rear
           partyWalls: ['east'],               // Right party wall
-          internalWalls: ['west']             // Wall to living/kitchen
+          internalWalls: ['west'],            // Wall to living/kitchen
+          doors: [
+            { wall: 'north', width: 0.9, height: 2.1, position: 0.05, type: 'external' }
+          ]
         },
         { 
           id: 'kitchen', 
@@ -72,7 +75,7 @@ export const PROPERTY_TEMPLATES = {
           partyWalls: ['west'],
           internalWalls: ['east'],
           windows: [
-            { wall: 'south', width: 1.2, height: 1.5, position: 0.8 }
+            { wall: 'south', width: 1.2, height: 1.5, position: 0.8, sillHeight: 0.9 }
           ]
         }
       ],
@@ -87,7 +90,7 @@ export const PROPERTY_TEMPLATES = {
           partyWalls: ['west'],
           internalWalls: ['east'],
           windows: [
-            { wall: 'north', width: 1.5, height: 1.8, position: 0.7 }
+            { wall: 'north', width: 1.5, height: 1.8, position: 0.7, sillHeight: 0.9 }
           ]
         },
         { 
@@ -100,7 +103,7 @@ export const PROPERTY_TEMPLATES = {
           partyWalls: ['east'],
           internalWalls: ['west', 'south'],
           windows: [
-            { wall: 'north', width: 1.0, height: 1.5, position: 0.0 }
+            { wall: 'north', width: 1.0, height: 1.5, position: 0.0, sillHeight: 0.9 }
           ]
         },
         { 
@@ -113,7 +116,7 @@ export const PROPERTY_TEMPLATES = {
           partyWalls: ['west'],
           internalWalls: ['east'],
           windows: [
-            { wall: 'south', width: 1.2, height: 1.5, position: 0.9 }
+            { wall: 'south', width: 1.2, height: 1.5, position: 0.9, sillHeight: 0.9 }
           ]
         },
         { 
@@ -126,7 +129,7 @@ export const PROPERTY_TEMPLATES = {
           partyWalls: ['east'],
           internalWalls: ['west'],
           windows: [
-            { wall: 'south', width: 0.6, height: 0.8, position: 0.2 }
+            { wall: 'south', width: 0.6, height: 0.8, position: 0.2, sillHeight: 1.5 }
           ]
         }
       ]
@@ -181,8 +184,22 @@ export const PROPERTY_TEMPLATES = {
         type: 'single_glazed',
         uValue: 5.0,
         frameType: 'timber_sash',
-        glazingRatio: 0.15,  // % of wall area
         description: 'Original sash windows'
+      },
+      
+      doors: {
+        external: {
+          type: 'timber_panel',
+          thickness: 0.045,
+          uValue: 3.0,
+          description: 'Solid timber panel door'
+        },
+        internal: {
+          type: 'timber_panel',
+          thickness: 0.035,
+          uValue: 2.0,
+          description: 'Timber panel door'
+        }
       }
     },
     
@@ -241,8 +258,8 @@ export const PROPERTY_TEMPLATES = {
           partyWalls: ['west'],
           internalWalls: ['south'],
           windows: [
-            { wall: 'north', width: 1.8, height: 1.5, position: 0.8 },
-            { wall: 'east', width: 1.5, height: 1.5, position: 1.0 }
+            { wall: 'north', width: 1.8, height: 1.5, position: 0.8, sillHeight: 0.9 },
+            { wall: 'east', width: 1.5, height: 1.5, position: 1.0, sillHeight: 0.9 }
           ]
         },
         { 
@@ -255,7 +272,7 @@ export const PROPERTY_TEMPLATES = {
           partyWalls: [],
           internalWalls: ['west'],
           windows: [
-            { wall: 'north', width: 0.6, height: 1.8, position: 0.3 }
+            { wall: 'north', width: 0.6, height: 1.8, position: 0.3, sillHeight: 0.9 }
           ]
         },
         { 
@@ -268,7 +285,7 @@ export const PROPERTY_TEMPLATES = {
           partyWalls: ['west'],
           internalWalls: ['north', 'south'],
           windows: [
-            { wall: 'east', width: 1.5, height: 1.5, position: 1.0 }
+            { wall: 'east', width: 1.5, height: 1.5, position: 1.0, sillHeight: 0.9 }
           ]
         },
         { 
@@ -281,8 +298,8 @@ export const PROPERTY_TEMPLATES = {
           partyWalls: ['west'],
           internalWalls: ['north'],
           windows: [
-            { wall: 'south', width: 1.2, height: 1.2, position: 0.8 },
-            { wall: 'east', width: 1.0, height: 1.2, position: 1.5 }
+            { wall: 'south', width: 1.2, height: 1.2, position: 0.8, sillHeight: 0.9 },
+            { wall: 'east', width: 1.0, height: 1.2, position: 1.5, sillHeight: 0.9 }
           ]
         }
       ],
@@ -297,8 +314,8 @@ export const PROPERTY_TEMPLATES = {
           partyWalls: ['west'],
           internalWalls: ['south'],
           windows: [
-            { wall: 'north', width: 1.5, height: 1.5, position: 0.9 },
-            { wall: 'east', width: 1.2, height: 1.5, position: 1.2 }
+            { wall: 'north', width: 1.5, height: 1.5, position: 0.9, sillHeight: 0.9 },
+            { wall: 'east', width: 1.2, height: 1.5, position: 1.2, sillHeight: 0.9 }
           ]
         },
         { 
@@ -311,7 +328,7 @@ export const PROPERTY_TEMPLATES = {
           partyWalls: ['west'],
           internalWalls: ['north', 'south'],
           windows: [
-            { wall: 'east', width: 1.2, height: 1.5, position: 1.0 }
+            { wall: 'east', width: 1.2, height: 1.5, position: 1.0, sillHeight: 0.9 }
           ]
         },
         { 
@@ -324,7 +341,7 @@ export const PROPERTY_TEMPLATES = {
           partyWalls: ['west'],
           internalWalls: ['north'],
           windows: [
-            { wall: 'south', width: 1.2, height: 1.2, position: 1.0 }
+            { wall: 'south', width: 1.2, height: 1.2, position: 1.0, sillHeight: 0.9 }
           ]
         },
         { 
@@ -337,7 +354,7 @@ export const PROPERTY_TEMPLATES = {
           partyWalls: [],
           internalWalls: ['north', 'west'],
           windows: [
-            { wall: 'south', width: 0.6, height: 0.8, position: 0.3 }
+            { wall: 'south', width: 0.6, height: 0.8, position: 0.3, sillHeight: 1.5 }
           ]
         }
       ]
@@ -391,8 +408,22 @@ export const PROPERTY_TEMPLATES = {
         type: 'single_glazed',
         uValue: 4.8,
         frameType: 'timber_casement',
-        glazingRatio: 0.18,
         description: 'Timber casement windows'
+      },
+      
+      doors: {
+        external: {
+          type: 'timber_panel',
+          thickness: 0.045,
+          uValue: 3.0,
+          description: 'Solid timber panel door'
+        },
+        internal: {
+          type: 'timber_panel',
+          thickness: 0.035,
+          uValue: 2.0,
+          description: 'Timber panel door'
+        }
       }
     },
     
@@ -449,8 +480,8 @@ export const PROPERTY_TEMPLATES = {
           partyWalls: [],
           internalWalls: ['south', 'east'],
           windows: [
-            { wall: 'north', width: 2.0, height: 1.5, position: 1.2 },
-            { wall: 'west', width: 1.5, height: 1.5, position: 1.5 }
+            { wall: 'north', width: 2.0, height: 1.5, position: 1.2, sillHeight: 0.9 },
+            { wall: 'west', width: 1.5, height: 1.5, position: 1.5, sillHeight: 0.9 }
           ]
         },
         { 
@@ -463,7 +494,7 @@ export const PROPERTY_TEMPLATES = {
           partyWalls: [],
           internalWalls: ['north', 'south', 'east'],
           windows: [
-            { wall: 'west', width: 1.5, height: 1.5, position: 1.0 }
+            { wall: 'west', width: 1.5, height: 1.5, position: 1.0, sillHeight: 0.9 }
           ]
         },
         { 
@@ -476,7 +507,7 @@ export const PROPERTY_TEMPLATES = {
           partyWalls: [],
           internalWalls: ['west', 'south'],
           windows: [
-            { wall: 'north', width: 0.8, height: 1.8, position: 0.5 }
+            { wall: 'north', width: 0.8, height: 1.8, position: 0.5, sillHeight: 0.9 }
           ]
         },
         { 
@@ -489,8 +520,8 @@ export const PROPERTY_TEMPLATES = {
           partyWalls: [],
           internalWalls: ['north', 'west'],
           windows: [
-            { wall: 'south', width: 1.2, height: 1.2, position: 0.9 },
-            { wall: 'east', width: 1.0, height: 1.2, position: 0.5 }
+            { wall: 'south', width: 1.2, height: 1.2, position: 0.9, sillHeight: 0.9 },
+            { wall: 'east', width: 1.0, height: 1.2, position: 0.5, sillHeight: 0.9 }
           ]
         },
         { 
@@ -503,7 +534,7 @@ export const PROPERTY_TEMPLATES = {
           partyWalls: [],
           internalWalls: ['north', 'west'],
           windows: [
-            { wall: 'east', width: 0.6, height: 0.8, position: 0.7 }
+            { wall: 'east', width: 0.6, height: 0.8, position: 0.7, sillHeight: 1.5 }
           ]
         }
       ],
@@ -518,8 +549,8 @@ export const PROPERTY_TEMPLATES = {
           partyWalls: [],
           internalWalls: ['south', 'east'],
           windows: [
-            { wall: 'north', width: 1.8, height: 1.5, position: 1.1 },
-            { wall: 'west', width: 1.5, height: 1.5, position: 1.2 }
+            { wall: 'north', width: 1.8, height: 1.5, position: 1.1, sillHeight: 0.9 },
+            { wall: 'west', width: 1.5, height: 1.5, position: 1.2, sillHeight: 0.9 }
           ]
         },
         { 
@@ -532,7 +563,7 @@ export const PROPERTY_TEMPLATES = {
           partyWalls: [],
           internalWalls: ['north', 'east'],
           windows: [
-            { wall: 'west', width: 1.2, height: 1.5, position: 1.1 }
+            { wall: 'west', width: 1.2, height: 1.5, position: 1.1, sillHeight: 0.9 }
           ]
         },
         { 
@@ -545,7 +576,7 @@ export const PROPERTY_TEMPLATES = {
           partyWalls: [],
           internalWalls: ['south', 'west'],
           windows: [
-            { wall: 'north', width: 1.2, height: 1.2, position: 0.9 }
+            { wall: 'north', width: 1.2, height: 1.2, position: 0.9, sillHeight: 0.9 }
           ]
         },
         { 
@@ -558,7 +589,7 @@ export const PROPERTY_TEMPLATES = {
           partyWalls: [],
           internalWalls: ['north', 'south', 'west'],
           windows: [
-            { wall: 'east', width: 1.0, height: 1.2, position: 0.7 }
+            { wall: 'east', width: 1.0, height: 1.2, position: 0.7, sillHeight: 0.9 }
           ]
         },
         { 
@@ -571,7 +602,7 @@ export const PROPERTY_TEMPLATES = {
           partyWalls: [],
           internalWalls: ['north', 'west'],
           windows: [
-            { wall: 'east', width: 0.6, height: 0.8, position: 0.7 }
+            { wall: 'east', width: 0.6, height: 0.8, position: 0.7, sillHeight: 1.5 }
           ]
         }
       ]
@@ -619,8 +650,22 @@ export const PROPERTY_TEMPLATES = {
         type: 'double_glazed',
         uValue: 3.0,
         frameType: 'timber',
-        glazingRatio: 0.20,
         description: 'Early double glazing'
+      },
+      
+      doors: {
+        external: {
+          type: 'composite_panel',
+          thickness: 0.045,
+          uValue: 1.8,
+          description: 'Composite panel door with insulation'
+        },
+        internal: {
+          type: 'hollow_core',
+          thickness: 0.035,
+          uValue: 2.0,
+          description: 'Hollow core door'
+        }
       }
     },
     
@@ -677,9 +722,9 @@ export const PROPERTY_TEMPLATES = {
           partyWalls: [],
           internalWalls: ['east'],
           windows: [
-            { wall: 'north', width: 2.0, height: 2.0, position: 1.4 },
-            { wall: 'west', width: 1.5, height: 2.0, position: 1.7 },
-            { wall: 'south', width: 2.4, height: 2.0, position: 1.3 }
+            { wall: 'north', width: 2.0, height: 2.0, position: 1.4, sillHeight: 0.9 },
+            { wall: 'west', width: 1.5, height: 2.0, position: 1.7, sillHeight: 0.9 },
+            { wall: 'south', width: 2.4, height: 2.0, position: 1.3, sillHeight: 0.9 }
           ]
         },
         { 
@@ -692,7 +737,7 @@ export const PROPERTY_TEMPLATES = {
           partyWalls: [],
           internalWalls: ['west', 'south'],
           windows: [
-            { wall: 'north', width: 0.5, height: 1.8, position: 0.15 }
+            { wall: 'north', width: 0.5, height: 1.8, position: 0.15, sillHeight: 0.9 }
           ]
         },
         { 
@@ -705,7 +750,7 @@ export const PROPERTY_TEMPLATES = {
           partyWalls: [],
           internalWalls: ['north', 'west', 'south'],
           windows: [
-            { wall: 'east', width: 0.4, height: 0.6, position: 0.55 }
+            { wall: 'east', width: 0.4, height: 0.6, position: 0.55, sillHeight: 1.5 }
           ]
         }
       ],
@@ -720,8 +765,8 @@ export const PROPERTY_TEMPLATES = {
           partyWalls: [],
           internalWalls: ['south', 'east'],
           windows: [
-            { wall: 'north', width: 1.5, height: 1.5, position: 1.0 },
-            { wall: 'west', width: 1.2, height: 1.5, position: 1.1 }
+            { wall: 'north', width: 1.5, height: 1.5, position: 1.0, sillHeight: 0.9 },
+            { wall: 'west', width: 1.2, height: 1.5, position: 1.1, sillHeight: 0.9 }
           ]
         },
         { 
@@ -734,7 +779,7 @@ export const PROPERTY_TEMPLATES = {
           partyWalls: [],
           internalWalls: ['north', 'east'],
           windows: [
-            { wall: 'west', width: 1.2, height: 1.2, position: 0.9 }
+            { wall: 'west', width: 1.2, height: 1.2, position: 0.9, sillHeight: 0.9 }
           ]
         },
         { 
@@ -747,7 +792,7 @@ export const PROPERTY_TEMPLATES = {
           partyWalls: [],
           internalWalls: ['south', 'west'],
           windows: [
-            { wall: 'north', width: 1.0, height: 1.2, position: 0.75 }
+            { wall: 'north', width: 1.0, height: 1.2, position: 0.75, sillHeight: 0.9 }
           ]
         },
         { 
@@ -760,7 +805,7 @@ export const PROPERTY_TEMPLATES = {
           partyWalls: [],
           internalWalls: ['north', 'west'],
           windows: [
-            { wall: 'east', width: 0.6, height: 0.8, position: 1.7 }
+            { wall: 'east', width: 0.6, height: 0.8, position: 1.7, sillHeight: 1.5 }
           ]
         }
       ]
@@ -808,8 +853,22 @@ export const PROPERTY_TEMPLATES = {
         type: 'double_glazed_low_e',
         uValue: 1.4,
         frameType: 'upvc',
-        glazingRatio: 0.25,
         description: 'Low-E double glazing'
+      },
+      
+      doors: {
+        external: {
+          type: 'composite_insulated',
+          thickness: 0.045,
+          uValue: 1.0,
+          description: 'Modern composite door, highly insulated'
+        },
+        internal: {
+          type: 'hollow_core',
+          thickness: 0.035,
+          uValue: 2.0,
+          description: 'Hollow core door'
+        }
       }
     },
     
@@ -864,7 +923,7 @@ export const PROPERTY_TEMPLATES = {
           partyWalls: ['west'],
           internalWalls: ['south', 'east'],
           windows: [
-            { wall: 'north', width: 2.0, height: 1.5, position: 1.2 }
+            { wall: 'north', width: 2.0, height: 1.5, position: 1.2, sillHeight: 0.9 }
           ]
         },
         { 
@@ -877,7 +936,7 @@ export const PROPERTY_TEMPLATES = {
           partyWalls: [],
           internalWalls: ['west', 'south'],
           windows: [
-            { wall: 'north', width: 0.5, height: 1.2, position: 0.35 }
+            { wall: 'north', width: 0.5, height: 1.2, position: 0.35, sillHeight: 0.9 }
           ]
         },
         { 
@@ -901,7 +960,7 @@ export const PROPERTY_TEMPLATES = {
           partyWalls: [],
           internalWalls: ['north', 'west', 'east'],
           windows: [
-            { wall: 'south', width: 1.2, height: 1.2, position: 0.8 }
+            { wall: 'south', width: 1.2, height: 1.2, position: 0.8, sillHeight: 0.9 }
           ]
         },
         { 
@@ -914,7 +973,7 @@ export const PROPERTY_TEMPLATES = {
           partyWalls: [],
           internalWalls: ['north', 'west'],
           windows: [
-            { wall: 'east', width: 0.6, height: 0.6, position: 0.95 }
+            { wall: 'east', width: 0.6, height: 0.6, position: 0.95, sillHeight: 1.5 }
           ]
         }
       ]
@@ -962,8 +1021,22 @@ export const PROPERTY_TEMPLATES = {
         type: 'double_glazed',
         uValue: 3.0,
         frameType: 'upvc',
-        glazingRatio: 0.20,
         description: 'Standard double glazing'
+      },
+      
+      doors: {
+        external: {
+          type: 'composite_panel',
+          thickness: 0.045,
+          uValue: 1.8,
+          description: 'Apartment entrance door'
+        },
+        internal: {
+          type: 'hollow_core',
+          thickness: 0.035,
+          uValue: 2.0,
+          description: 'Hollow core door'
+        }
       }
     },
     
