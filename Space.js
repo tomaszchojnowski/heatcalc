@@ -73,11 +73,54 @@ export class Space {
   }
   
   /**
-   * Calculate window area based on glazing ratio
+   * Calculate window area from ACTUAL windows in layout
    */
   getWindowArea() {
-    if (!this.windowCharacteristics) return 0;
-    return this.getTotalWallArea() * this.windowCharacteristics.glazingRatio;
+    if (!this.windows || this.windows.length === 0) return 0;
+    return this.windows.reduce((total, window) => {
+      return total + (window.width * window.height);
+    }, 0);
+  }
+  
+  /**
+   * Get window area for specific wall direction
+   */
+  getWindowAreaByWall(direction) {
+    if (!this.windows) return 0;
+    return this.windows
+      .filter(w => w.wall === direction)
+      .reduce((total, window) => total + (window.width * window.height), 0);
+  }
+  
+  /**
+   * Calculate door area from ACTUAL doors in layout
+   */
+  getDoorArea() {
+    if (!this.doors || this.doors.length === 0) return 0;
+    return this.doors.reduce((total, door) => {
+      return total + (door.width * door.height);
+    }, 0);
+  }
+  
+  /**
+   * Get door area for specific wall direction
+   */
+  getDoorAreaByWall(direction) {
+    if (!this.doors) return 0;
+    return this.doors
+      .filter(d => d.wall === direction)
+      .reduce((total, door) => total + (door.width * door.height), 0);
+  }
+  
+  /**
+   * Get NET wall area for specific direction (wall - windows - doors)
+   */
+  getNetWallAreaByDirection(direction) {
+    const wallArea = this.wallAreas[direction] || 0;
+    const windowArea = this.getWindowAreaByWall(direction);
+    const doorArea = this.getDoorAreaByWall(direction);
+    
+    return Math.max(0, wallArea - windowArea - doorArea);
   }
   
   /**
