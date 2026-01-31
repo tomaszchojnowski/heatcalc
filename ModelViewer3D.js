@@ -370,18 +370,18 @@ export class ModelViewer3D {
   buildRoof(template) {
     const dims = template.dimensions;
     const roofLevel = dims.roofLevel || 6.3;
-    const roofHeight = (dims.width / 2) * Math.tan((dims.roofPitch * Math.PI) / 180);
+    const roofHeight = (dims.depth / 2) * Math.tan((dims.roofPitch * Math.PI) / 180);
     
     // Create pitched roof geometry
     const shape = new THREE.Shape();
-    shape.moveTo(-dims.width / 2, 0);
-    shape.lineTo(dims.width / 2, 0);
+    shape.moveTo(-dims.depth / 2, 0);
+    shape.lineTo(dims.depth / 2, 0);
     shape.lineTo(0, roofHeight);
-    shape.lineTo(-dims.width / 2, 0);
+    shape.lineTo(-dims.depth / 2, 0);
     
     const extrudeSettings = {
       steps: 1,
-      depth: dims.depth,
+      depth: dims.width,
       bevelEnabled: false
     };
     
@@ -395,7 +395,7 @@ export class ModelViewer3D {
     });
     
     const roofMesh = new THREE.Mesh(geometry, material);
-    roofMesh.position.set(dims.width / 2, roofLevel, 0);
+    roofMesh.position.set(dims.depth / 2, roofLevel, 0);
     //roofMesh.rotation.z = Math.PI / 2;
     //roofMesh.rotation.x = Math.PI / 2;
     roofMesh.castShadow = true;
