@@ -96,6 +96,7 @@ export class HeatLossCalculator {
       ceiling: 0,
       walls: {},
       windows: 0,
+      doors: 0,
       ventilation: 0,
       fabricLoss: 0,
       ventilationLoss: 0,
@@ -121,34 +122,53 @@ export class HeatLossCalculator {
       );
     }
     
-    // Wall heat loss (each direction)
-    const windowArea = space.getWindowArea();
-    const totalWallArea = space.getTotalWallArea();
-    const wallAreaPerDirection = totalWallArea / 4; // Simplified distribution
-    const windowAreaPerDirection = windowArea / 4;
-    
+    // Wall heat loss (each direction) - USE ACTUAL AREAS PER WALL
     Object.keys(space.wallConstruction).forEach(direction => {
       const wallConstruction = space.wallConstruction[direction];
+      
       if (wallConstruction && wallConstruction.uValue > 0) {
-        // Net wall area (minus windows)
-        const netWallArea = wallAreaPerDirection - windowAreaPerDirection;
-        heatLoss.walls[direction] = this.calculateElementLoss(
-          wallConstruction.uValue,
-          netWallArea,
-          deltaT
-        );
+        // Get NET wall area (wall - windows - doors) for THIS specific direction
+        const netWallArea = space.getNetWallAreaByDirection(direction);
+        
+        if (netWallArea > 0) {
+          heatLoss.walls[direction] = this.calculateElementLoss(
+            wallConstruction.uValue,
+            netWallArea,
+            deltaT
+          );
+          console.log(`  ${direction} wall: U=${wallConstruction.uValue}, NetArea=${netWallArea.toFixed(2)}m², Loss=${heatLoss.walls[direction].toFixed(1)}W`);
+        } else {
+          heatLoss.walls[direction] = 0;
+        }
       } else {
         heatLoss.walls[direction] = 0;
       }
     });
     
-    // Window heat loss
-    if (space.windowCharacteristics && windowArea > 0) {
+    // Window heat loss - USE ACTUAL WINDOW DIMENSIONS
+    const totalWindowArea = space.getWindowArea();
+    if (space.windowCharacteristics && totalWindowArea > 0) {
       heatLoss.windows = this.calculateElementLoss(
         space.windowCharacteristics.uValue,
-        windowArea,
+        totalWindowArea,
         deltaT
       );
+      console.log(`  Windows: U=${space.windowCharacteristics.uValue}, A=${totalWindowArea.toFixed(2)}m², Loss=${heatLoss.windows.toFixed(1)}W`);
+    }
+    
+    // Door heat loss - NEW CALCULATION FOR EXTERNAL DOORS
+    const externalDoors = space.doors ? space.doors.filter(d => d.type === 'external') : [];
+    const totalDoorArea = externalDoors.reduce((sum, door) => sum + (door.width * door.height), 0);
+    
+    if (space.doorCharacteristics && space.doorCharacteristics.external && totalDoorArea > 0) {
+      heatLoss.doors = this.calculateElementLoss(
+        space.doorCharacteristics.external.uValue,
+        totalDoorArea,
+        deltaT
+      );
+      console.log(`  Doors: U=${space.doorCharacteristics.external.uValue}, A=${totalDoorArea.toFixed(2)}m², Loss=${heatLoss.doors.toFixed(1)}W`);
+    } else {
+      heatLoss.doors = 0;
     }
     
     // Ventilation heat loss
@@ -163,7 +183,8 @@ export class HeatLossCalculator {
       heatLoss.floor +
       heatLoss.ceiling +
       Object.values(heatLoss.walls).reduce((sum, val) => sum + val, 0) +
-      heatLoss.windows;
+      heatLoss.windows +
+      heatLoss.doors;
     
     heatLoss.ventilationLoss = heatLoss.ventilation;
     heatLoss.total = heatLoss.fabricLoss + heatLoss.ventilationLoss;
