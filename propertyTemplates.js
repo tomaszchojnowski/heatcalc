@@ -158,11 +158,13 @@ export const PROPERTY_TEMPLATES = {
       floor: {
         ground: {
           type: 'suspended_timber',
+          thickness: 0.30,  // Timber joists + floorboards + void
           uValue: 0.7,  // Uninsulated, ventilated void
           description: 'Suspended timber, ventilated underfloor'
         },
         upper: {
           type: 'timber_joists',
+          thickness: 0.25,  // Joists + floorboards + ceiling plaster
           uValue: 1.5,
           description: 'Timber joists between floors'
         }
@@ -170,6 +172,7 @@ export const PROPERTY_TEMPLATES = {
       
       roof: {
         type: 'pitched_slate',
+        thickness: 0.20,  // Slates + battens + felt
         uValue: 2.3,  // Typically no insulation
         description: 'Slate roof, uninsulated loft'
       },
@@ -365,11 +368,13 @@ export const PROPERTY_TEMPLATES = {
       floor: {
         ground: {
           type: 'solid_concrete',
+          thickness: 0.15,  // Concrete slab
           uValue: 0.8,
           description: 'Solid concrete slab'
         },
         upper: {
           type: 'timber_joists',
+          thickness: 0.25,  // Joists + floorboards + ceiling
           uValue: 1.5,
           description: 'Timber joists'
         }
@@ -377,6 +382,7 @@ export const PROPERTY_TEMPLATES = {
       
       roof: {
         type: 'pitched_tile',
+        thickness: 0.18,  // Clay tiles + battens
         uValue: 1.8,
         description: 'Clay tile, minimal insulation'
       },
@@ -590,11 +596,13 @@ export const PROPERTY_TEMPLATES = {
       floor: {
         ground: {
           type: 'solid_concrete',
+          thickness: 0.20,  // Concrete slab with minimal insulation
           uValue: 0.6,
           description: 'Concrete slab, minimal insulation'
         },
         upper: {
           type: 'timber_joists',
+          thickness: 0.25,  // Joists + floorboards + ceiling
           uValue: 1.5,
           description: 'Timber joists'
         }
@@ -602,6 +610,7 @@ export const PROPERTY_TEMPLATES = {
       
       roof: {
         type: 'pitched_tile',
+        thickness: 0.20,  // Tiles + insulation layer
         uValue: 0.6,
         description: 'Some loft insulation (50-100mm)'
       },
@@ -776,11 +785,13 @@ export const PROPERTY_TEMPLATES = {
       floor: {
         ground: {
           type: 'insulated_slab',
+          thickness: 0.25,  // Concrete slab + insulation layer
           uValue: 0.22,
           description: 'Insulated concrete slab'
         },
         upper: {
           type: 'timber_joists',
+          thickness: 0.25,  // Engineered joists + flooring + ceiling
           uValue: 1.5,
           description: 'Engineered joists'
         }
@@ -788,6 +799,7 @@ export const PROPERTY_TEMPLATES = {
       
       roof: {
         type: 'insulated_truss',
+        thickness: 0.30,  // Tiles + 270mm insulation + structure
         uValue: 0.16,
         description: '270mm loft insulation'
       },
@@ -933,6 +945,7 @@ export const PROPERTY_TEMPLATES = {
       floor: {
         ground: {
           type: 'concrete',
+          thickness: 0.20,  // Concrete slab (heated space below - no heat loss)
           uValue: 0.0,  // Heated space below
           description: 'Concrete floor (flat below)'
         }
@@ -940,6 +953,7 @@ export const PROPERTY_TEMPLATES = {
       
       roof: {
         type: 'concrete',
+        thickness: 0.20,  // Concrete ceiling (heated space above - no heat loss)
         uValue: 0.0,  // Heated space above
         description: 'Concrete ceiling (flat above)'
       },
