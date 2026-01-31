@@ -91,6 +91,15 @@ export class Building {
     // Find corresponding room data from layout
     const roomData = template.layout[floorKey].find(r => r.id === space.id);
     
+    // Assign windows and doors from layout (SINGLE POINT OF TRUTH)
+    if (roomData) {
+      space.windows = roomData.windows ? JSON.parse(JSON.stringify(roomData.windows)) : [];
+      space.doors = roomData.doors ? JSON.parse(JSON.stringify(roomData.doors)) : [];
+    } else {
+      space.windows = [];
+      space.doors = [];
+    }
+    
     // Initialize all walls as internal by default
     space.wallConstruction = {
       north: JSON.parse(JSON.stringify(template.construction.walls.internal)),
@@ -118,8 +127,9 @@ export class Building {
       // Internal walls remain as already set
     }
     
-    // Window characteristics
+    // Window and door characteristics from construction
     space.windowCharacteristics = JSON.parse(JSON.stringify(template.construction.windows));
+    space.doorCharacteristics = template.construction.doors ? JSON.parse(JSON.stringify(template.construction.doors)) : null;
   }
   
   /**
