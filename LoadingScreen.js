@@ -70,11 +70,11 @@ export class LoadingScreen {
     try {
       // Step 1: Climate data (already loaded)
       await this.showStep(0);
-      await this.delay(600);
+      await this.delay(100);
       
       // Step 2: 3D model (already created)
       await this.showStep(1);
-      await this.delay(600);
+      await this.delay(200);
       
       // Step 3: Calculate heat loss
       await this.showStep(2);

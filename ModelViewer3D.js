@@ -395,7 +395,7 @@ export class ModelViewer3D {
     });
     
     const roofMesh = new THREE.Mesh(geometry, material);
-    roofMesh.position.set(dims.depth, roofLevel, 0);
+    roofMesh.position.set(dims.depth/2, roofLevel, dims.width);
     roofMesh.rotation.y = -Math.PI / 2;
     //roofMesh.rotation.x = Math.PI / 2;
     roofMesh.castShadow = true;
