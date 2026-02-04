@@ -6,7 +6,7 @@
 import { getState, updateBuilding } from './state.js';
 import { navigateTo } from './router.js';
 import { Building } from './Building.js';
-import { ModelViewer3D } from './ModelViewer3d.js';
+import { ModelViewer3D } from './ModelViewer3D.js';
 
 export class SpaceEditor {
   constructor() {
