@@ -10,7 +10,7 @@ import { ModelViewer3D } from './ModelViewer3D.js';
 
 export class SpaceEditor {
   constructor() {
-    this.name = 'space-editor';
+    this.name = 'spaceEditor';
     this.container = null;
     this.building = null;
     this.originalBuilding = null; // For cancellation

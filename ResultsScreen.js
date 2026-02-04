@@ -457,7 +457,7 @@ export class ResultsScreen {
           <button class="btn btn-solid btn-full btn-lg" id="fineTuneBtn">
             Fine-Tune Details
           </button>
-          <button onclick="navigateTo('space-editor')">
+          <button class="btn btn-secondary btn-full" id="spaceEditorBtn">
             Edit Room Dimensions
           </button>
           <button class="btn btn-secondary btn-full" id="viewModelBtn">
@@ -479,6 +479,8 @@ export class ResultsScreen {
    */
   attachEventListeners() {
     const fineTuneBtn = document.getElementById('fineTuneBtn');
+    const spaceEditorBtn = document.getElementById('spaceEditorBtn');
+
     const viewModelBtn = document.getElementById('viewModelBtn');
     const exportBtn = document.getElementById('exportBtn');
     const shareBtn = document.getElementById('shareBtn');
@@ -486,6 +488,12 @@ export class ResultsScreen {
     if (fineTuneBtn) {
       fineTuneBtn.addEventListener('click', () => {
         navigateTo('edit');
+      });
+    }
+
+    if (spaceEditorBtn) {
+      spaceEditorBtn.addEventListener('click', () => {
+        navigateTo('spaceEditor');
       });
     }
     
