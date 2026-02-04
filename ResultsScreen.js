@@ -457,6 +457,9 @@ export class ResultsScreen {
           <button class="btn btn-solid btn-full btn-lg" id="fineTuneBtn">
             Fine-Tune Details
           </button>
+          <button onclick="navigateTo('space-editor')">
+            Edit Room Dimensions
+          </button>
           <button class="btn btn-secondary btn-full" id="viewModelBtn">
             View 3D Model
           </button>
