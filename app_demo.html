@@ -24,6 +24,8 @@ import { enableAutoSave } from './state.js';
 import { Building } from './Building.js';
 import { PROPERTY_TEMPLATES } from './propertyTemplates.js';
 
+import { SpaceEditor } from './SpaceEditor.js';
+
 // Make Building and templates available globally for state management and 3D viewer
 window.Building = Building;
 window.PROPERTY_TEMPLATES = PROPERTY_TEMPLATES;
@@ -44,12 +46,16 @@ const inputScreen = new InputScreen();
 const loadingScreen = new LoadingScreen();
 const resultsScreen = new ResultsScreen();
 const editScreen = new EditScreen();
+const spaceEditor = new SpaceEditor();
+
 
 // Register screens
 registerScreen('input', inputScreen);
 registerScreen('loading', loadingScreen);
 registerScreen('results', resultsScreen);
 registerScreen('edit', editScreen);
+registerScreen('space-editor', spaceEditor);
+
 
 // Enable auto-save (every 30 seconds)
 enableAutoSave(30000);
